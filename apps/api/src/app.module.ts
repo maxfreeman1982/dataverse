@@ -9,6 +9,7 @@ import { HealthModule } from './modules/health/health.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { DatabaseModule } from './modules/database/database.module';
+import { WebsocketModule } from './modules/websocket/websocket.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { DatabaseModule } from './modules/database/database.module';
     }),
 
     // Application modules
+    WebsocketModule,
     HealthModule,
     AuthModule,
     UsersModule,

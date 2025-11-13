@@ -30,7 +30,8 @@
     "tailwind-merge": "^2.2.0",
     "tailwindcss-animate": "^1.0.7",
     "zustand": "^4.4.7",
-    "date-fns": "^3.0.6"
+    "date-fns": "^3.0.6",
+    "socket.io-client": "^4.6.0"
   },
   "devDependencies": {
     "@types/node": "^20.10.5",

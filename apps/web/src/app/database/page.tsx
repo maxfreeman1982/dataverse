@@ -1,6 +1,7 @@
 'use client'
 
 import { useQuery, gql } from '@apollo/client'
+import Link from 'next/link'
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -108,10 +109,8 @@ export default function DatabasePage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {tables.map((table: any) => (
-            <Card
-              key={table.id}
-              className="cursor-pointer transition-all hover:shadow-md hover:border-primary/50"
-            >
+            <Link key={table.id} href={`/database/${table.id}`}>
+              <Card className="cursor-pointer transition-all hover:shadow-md hover:border-primary/50">
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div className="flex items-center space-x-3">
@@ -153,6 +152,7 @@ export default function DatabasePage() {
                 </div>
               </CardContent>
             </Card>
+            </Link>
           ))}
         </div>
       )}
