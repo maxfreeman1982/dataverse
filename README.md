@@ -16,8 +16,9 @@ A modular, intelligent, and secure ecosystem combining no-code tools, databases,
 - ✅ Frontend (Next.js + React + Tailwind)
 - ✅ Dashboard & Navigation
 - ✅ Database Studio UI
-- ⏳ Real-time Communication - Coming soon
-- ⏳ AI Integration - Coming soon
+- ✅ **Dynamic CRUD** - Full data management with validation
+- ✅ **Real-time Collaboration** - Live updates via WebSocket
+- ✅ **AI Integration** - GPT-powered assistant (Cmd+K)
 
 ## 🏗️ Architecture
 
@@ -34,6 +35,29 @@ dataverse/
 ├── docker/           # Docker configurations
 └── docs/             # Documentation
 ```
+
+## ⭐ Key Features
+
+### 1. Dynamic CRUD System
+- **Dynamic data storage** with JSONB for flexible schemas
+- **Type validation** for 13+ column types (text, number, date, email, etc.)
+- **Real-time data grid** with sorting, filtering, and pagination
+- **Inline editing** with dynamic form generation
+- **Bulk operations** and advanced querying
+
+### 2. Real-time Collaboration
+- **WebSocket integration** with Socket.io
+- **Live updates** across all connected clients
+- **Room-based events** (per table)
+- **Instant notifications** when data changes
+- **Connection status** indicator
+
+### 3. AI Assistant
+- **Command Bar** (Cmd+K) for quick access
+- **GPT-powered** responses using OpenAI
+- **Context-aware** based on workspace data
+- **Natural language** queries
+- **Smart suggestions** for database schemas
 
 ## 🚀 Quick Start
 
@@ -60,6 +84,11 @@ pnpm install
 ```bash
 cp .env.example .env
 # Edit .env with your configuration
+```
+
+**Important:** To enable AI features, add your OpenAI API key to `.env`:
+```bash
+OPENAI_API_KEY=sk-your-api-key-here
 ```
 
 4. **Start infrastructure services**
@@ -228,10 +257,12 @@ query {
 **Backend:**
 - NestJS - Framework
 - TypeORM - ORM
-- PostgreSQL - Primary database
+- PostgreSQL - Primary database (with JSONB for dynamic data)
 - GraphQL (Apollo) - API layer
 - JWT - Authentication
 - Redis - Cache & sessions
+- **Socket.io** - Real-time WebSocket
+- **OpenAI API** - AI integration
 
 **Frontend:**
 - Next.js 14 - React framework (App Router)
@@ -241,6 +272,8 @@ query {
 - Shadcn/ui - Component library
 - Apollo Client - GraphQL client
 - Zustand - State management
+- **Socket.io-client** - Real-time updates
+- **cmdk** - Command palette
 
 **Infrastructure:**
 - Docker - Containerization
@@ -305,7 +338,7 @@ See [DATAVERSE_OS_ARCHITECTURE.md](./DATAVERSE_OS_ARCHITECTURE.md) for complete 
 
 ## 🎯 Roadmap
 
-### Phase 1 (Current) - Foundation
+### Phase 1 (Completed) ✅ - Foundation
 - [x] Project structure (Monorepo)
 - [x] Backend API (NestJS)
 - [x] Authentication (JWT)
@@ -314,11 +347,14 @@ See [DATAVERSE_OS_ARCHITECTURE.md](./DATAVERSE_OS_ARCHITECTURE.md) for complete 
 - [x] Frontend (Next.js + React + Tailwind)
 - [x] Dashboard & Navigation
 - [x] Database Studio UI
-- [ ] Real-time sync (Socket.io)
+- [x] **Dynamic CRUD system**
+- [x] **Real-time collaboration (Socket.io)**
+- [x] **AI Integration (OpenAI)**
+- [x] **Command Bar (Cmd+K)**
 
-### Phase 2 - Core Features
-- [ ] No-Code Builder
-- [ ] AI Copilot integration
+### Phase 2 (Current) - Core Features
+- [ ] No-Code Builder (visual workflow editor)
+- [ ] Advanced AI features (RAG, fine-tuning)
 - [ ] Communication module (chat, video)
 - [ ] Suite bureautique (docs, spreadsheet)
 - [ ] Mail AI
