@@ -13,7 +13,9 @@ A modular, intelligent, and secure ecosystem combining no-code tools, databases,
 - ✅ Authentication (JWT)
 - ✅ User Management
 - ✅ Database Studio (Schema Management)
-- ⏳ Frontend (Next.js) - Coming soon
+- ✅ Frontend (Next.js + React + Tailwind)
+- ✅ Dashboard & Navigation
+- ✅ Database Studio UI
 - ⏳ Real-time Communication - Coming soon
 - ⏳ AI Integration - Coming soon
 
@@ -23,7 +25,7 @@ A modular, intelligent, and secure ecosystem combining no-code tools, databases,
 dataverse/
 ├── apps/
 │   ├── api/          # Backend API (NestJS + GraphQL)
-│   └── web/          # Frontend (Next.js) - Coming soon
+│   └── web/          # Frontend (Next.js + React + Tailwind)
 ├── packages/
 │   ├── database/     # Database utilities
 │   ├── auth/         # Authentication module
@@ -83,6 +85,20 @@ The API will be available at:
 - REST API: http://localhost:3001/api/v1
 - GraphQL: http://localhost:3001/graphql
 - Health: http://localhost:3001/api/v1/health
+
+6. **Start the Frontend** (in a new terminal)
+```bash
+cd apps/web
+pnpm install
+pnpm run dev
+```
+
+The web app will be available at:
+- Frontend: http://localhost:3000
+
+**Default credentials for testing:**
+- Create a new account via the Register page
+- Or use GraphQL Playground to create a user first
 
 ## 📚 API Documentation
 
@@ -200,6 +216,13 @@ query {
 - `src/modules/health/` - Health checks
 - `src/common/` - Shared utilities (guards, decorators, etc.)
 
+**Frontend (apps/web):**
+- `src/app/` - Next.js App Router pages
+- `src/components/` - React components
+- `src/lib/` - Utilities (Apollo client, utils)
+- `src/store/` - State management (Zustand)
+- `src/hooks/` - Custom React hooks
+
 ### Tech Stack
 
 **Backend:**
@@ -209,6 +232,15 @@ query {
 - GraphQL (Apollo) - API layer
 - JWT - Authentication
 - Redis - Cache & sessions
+
+**Frontend:**
+- Next.js 14 - React framework (App Router)
+- React 18 - UI library
+- TypeScript - Type safety
+- Tailwind CSS - Styling
+- Shadcn/ui - Component library
+- Apollo Client - GraphQL client
+- Zustand - State management
 
 **Infrastructure:**
 - Docker - Containerization
@@ -224,6 +256,7 @@ pnpm install
 # Development
 pnpm run dev              # Start all apps in dev mode
 cd apps/api && pnpm dev   # Start API only
+cd apps/web && pnpm dev   # Start Frontend only
 
 # Build
 pnpm run build            # Build all apps
@@ -278,7 +311,9 @@ See [DATAVERSE_OS_ARCHITECTURE.md](./DATAVERSE_OS_ARCHITECTURE.md) for complete 
 - [x] Authentication (JWT)
 - [x] User management
 - [x] Database Studio schema management
-- [ ] Frontend (Next.js)
+- [x] Frontend (Next.js + React + Tailwind)
+- [x] Dashboard & Navigation
+- [x] Database Studio UI
 - [ ] Real-time sync (Socket.io)
 
 ### Phase 2 - Core Features
