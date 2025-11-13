@@ -20,6 +20,7 @@ A modular, intelligent, and secure ecosystem combining no-code tools, databases,
 - ✅ **Real-time Collaboration** - Live updates via WebSocket
 - ✅ **AI Integration** - GPT-powered assistant (Cmd+K)
 - ✅ **No-Code Builder** - Visual page builder with 12+ components
+- ✅ **Chat Module** - Real-time messaging with channels and DMs
 
 ## 🏗️ Architecture
 
@@ -68,6 +69,16 @@ dataverse/
 - **Publish/Unpublish** pages with slug-based routing
 - **Public page viewer** at `/p/[slug]` for published pages
 - **Component library** with extensive styling options
+
+### 5. Communication (Chat)
+- **Real-time messaging** with WebSocket integration
+- **Channels** - Public, private, and direct message channels
+- **Message features** - Edit, delete, reply, reactions
+- **Typing indicators** - See when users are typing
+- **Channel management** - Create, update, archive channels
+- **Member management** - Add/remove members from channels
+- **Message history** - Full message history with pagination
+- **Real-time updates** - Instant message delivery
 
 ## 🚀 Quick Start
 
@@ -253,6 +264,7 @@ query {
 - `src/modules/users/` - User management
 - `src/modules/database/` - Database Studio (table schema + dynamic CRUD)
 - `src/modules/builder/` - No-Code Builder (pages & components)
+- `src/modules/chat/` - Communication (channels, messages, real-time chat)
 - `src/modules/ai/` - AI Assistant (OpenAI integration)
 - `src/modules/websocket/` - Real-time collaboration
 - `src/modules/health/` - Health checks
@@ -367,8 +379,9 @@ See [DATAVERSE_OS_ARCHITECTURE.md](./DATAVERSE_OS_ARCHITECTURE.md) for complete 
 
 ### Phase 2 (Current) - Core Features
 - [x] **No-Code Builder** (visual page editor with 12+ components) ✅
+- [x] **Communication module** (real-time chat with channels) ✅
 - [ ] Advanced AI features (RAG, fine-tuning)
-- [ ] Communication module (chat, video)
+- [ ] Video calls (WebRTC integration)
 - [ ] Suite bureautique (docs, spreadsheet)
 - [ ] Mail AI
 - [ ] Workflow automation engine

@@ -12,6 +12,7 @@ import { DatabaseModule } from './modules/database/database.module';
 import { WebsocketModule } from './modules/websocket/websocket.module';
 import { AIModule } from './modules/ai/ai.module';
 import { BuilderModule } from './modules/builder/builder.module';
+import { ChatModule } from './modules/chat/chat.module';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { BuilderModule } from './modules/builder/builder.module';
     DatabaseModule,
     AIModule,
     BuilderModule,
+    ChatModule,
   ],
 })
 export class AppModule {}

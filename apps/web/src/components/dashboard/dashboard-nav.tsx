@@ -18,8 +18,8 @@ const navigation = [
   { name: 'Home', href: '/dashboard', icon: Home },
   { name: 'Database', href: '/database', icon: Database },
   { name: 'Builder', href: '/dashboard/builder', icon: Zap },
+  { name: 'Chat', href: '/dashboard/chat', icon: MessageSquare },
   { name: 'Mail', href: '/mail', icon: Mail },
-  { name: 'Chat', href: '/chat', icon: MessageSquare },
   { name: 'Docs', href: '/docs', icon: FileText },
   { name: 'AI Hub', href: '/ai', icon: Bot },
 ]
