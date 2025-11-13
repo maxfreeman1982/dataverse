@@ -11,6 +11,7 @@ import { UsersModule } from './modules/users/users.module';
 import { DatabaseModule } from './modules/database/database.module';
 import { WebsocketModule } from './modules/websocket/websocket.module';
 import { AIModule } from './modules/ai/ai.module';
+import { BuilderModule } from './modules/builder/builder.module';
 
 @Module({
   imports: [
@@ -54,6 +55,7 @@ import { AIModule } from './modules/ai/ai.module';
     UsersModule,
     DatabaseModule,
     AIModule,
+    BuilderModule,
   ],
 })
 export class AppModule {}

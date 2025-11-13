@@ -19,6 +19,7 @@ A modular, intelligent, and secure ecosystem combining no-code tools, databases,
 - ✅ **Dynamic CRUD** - Full data management with validation
 - ✅ **Real-time Collaboration** - Live updates via WebSocket
 - ✅ **AI Integration** - GPT-powered assistant (Cmd+K)
+- ✅ **No-Code Builder** - Visual page builder with 12+ components
 
 ## 🏗️ Architecture
 
@@ -58,6 +59,15 @@ dataverse/
 - **Context-aware** based on workspace data
 - **Natural language** queries
 - **Smart suggestions** for database schemas
+
+### 4. No-Code Builder
+- **Visual page editor** with drag-and-drop interface
+- **12+ component types** (Text, Heading, Button, Form, Table, Card, etc.)
+- **Property editor** panel for customizing components
+- **Real-time collaboration** - see changes from other users instantly
+- **Publish/Unpublish** pages with slug-based routing
+- **Public page viewer** at `/p/[slug]` for published pages
+- **Component library** with extensive styling options
 
 ## 🚀 Quick Start
 
@@ -241,7 +251,10 @@ query {
 **Backend (apps/api):**
 - `src/modules/auth/` - Authentication & JWT
 - `src/modules/users/` - User management
-- `src/modules/database/` - Database Studio (table schema management)
+- `src/modules/database/` - Database Studio (table schema + dynamic CRUD)
+- `src/modules/builder/` - No-Code Builder (pages & components)
+- `src/modules/ai/` - AI Assistant (OpenAI integration)
+- `src/modules/websocket/` - Real-time collaboration
 - `src/modules/health/` - Health checks
 - `src/common/` - Shared utilities (guards, decorators, etc.)
 
@@ -353,11 +366,12 @@ See [DATAVERSE_OS_ARCHITECTURE.md](./DATAVERSE_OS_ARCHITECTURE.md) for complete 
 - [x] **Command Bar (Cmd+K)**
 
 ### Phase 2 (Current) - Core Features
-- [ ] No-Code Builder (visual workflow editor)
+- [x] **No-Code Builder** (visual page editor with 12+ components) ✅
 - [ ] Advanced AI features (RAG, fine-tuning)
 - [ ] Communication module (chat, video)
 - [ ] Suite bureautique (docs, spreadsheet)
 - [ ] Mail AI
+- [ ] Workflow automation engine
 
 ### Phase 3 - Advanced Features
 - [ ] Workflow automation
