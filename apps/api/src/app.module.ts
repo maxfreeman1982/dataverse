@@ -10,6 +10,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { DatabaseModule } from './modules/database/database.module';
 import { WebsocketModule } from './modules/websocket/websocket.module';
+import { AIModule } from './modules/ai/ai.module';
 
 @Module({
   imports: [
@@ -52,6 +53,7 @@ import { WebsocketModule } from './modules/websocket/websocket.module';
     AuthModule,
     UsersModule,
     DatabaseModule,
+    AIModule,
   ],
 })
 export class AppModule {}

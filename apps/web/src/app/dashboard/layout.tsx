@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useAuthStore } from '@/store/auth-store'
 import { DashboardNav } from '@/components/dashboard/dashboard-nav'
 import { DashboardHeader } from '@/components/dashboard/dashboard-header'
+import { CommandBar } from '@/components/command-bar'
 
 export default function DashboardLayout({
   children,
@@ -25,14 +26,17 @@ export default function DashboardLayout({
   }
 
   return (
-    <div className="flex min-h-screen">
-      <DashboardNav />
-      <div className="flex-1 flex flex-col">
-        <DashboardHeader />
-        <main className="flex-1 overflow-y-auto bg-muted/40 p-8">
-          {children}
-        </main>
+    <>
+      <CommandBar />
+      <div className="flex min-h-screen">
+        <DashboardNav />
+        <div className="flex-1 flex flex-col">
+          <DashboardHeader />
+          <main className="flex-1 overflow-y-auto bg-muted/40 p-8">
+            {children}
+          </main>
+        </div>
       </div>
-    </div>
+    </>
   )
 }
