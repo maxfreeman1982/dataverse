@@ -1,42 +1,28 @@
-import { Resolver, Mutation, Args, ObjectType, Field } from '@nestjs/graphql';
+import { Resolver, Mutation, Query, Args } from '@nestjs/graphql';
+import { UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { User } from '../users/user.entity';
+import { User } from './entities/user.entity';
+import { RegisterInput, LoginInput, AuthPayload } from './dto/auth.dto';
+import { GqlAuthGuard } from './guards/gql-auth.guard';
+import { CurrentUser } from './decorators/current-user.decorator';
 
-@ObjectType()
-class AuthPayload {
-  @Field()
-  accessToken: string;
-
-  @Field(() => User)
-  user: User;
-}
-
-@Resolver()
+@Resolver(() => User)
 export class AuthResolver {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private authService: AuthService) {}
 
   @Mutation(() => AuthPayload)
-  async register(
-    @Args('email') email: string,
-    @Args('password') password: string,
-    @Args('username', { nullable: true }) username?: string,
-    @Args('firstName', { nullable: true }) firstName?: string,
-    @Args('lastName', { nullable: true }) lastName?: string,
-  ): Promise<AuthPayload> {
-    return this.authService.register({
-      email,
-      password,
-      username,
-      firstName,
-      lastName,
-    });
+  async register(@Args('input') input: RegisterInput): Promise<AuthPayload> {
+    return this.authService.register(input);
   }
 
   @Mutation(() => AuthPayload)
-  async login(
-    @Args('email') email: string,
-    @Args('password') password: string,
-  ): Promise<AuthPayload> {
-    return this.authService.login(email, password);
+  async login(@Args('input') input: LoginInput): Promise<AuthPayload> {
+    return this.authService.login(input);
+  }
+
+  @Query(() => User)
+  @UseGuards(GqlAuthGuard)
+  async me(@CurrentUser() user: User): Promise<User> {
+    return this.authService.getCurrentUser(user.id);
   }
 }

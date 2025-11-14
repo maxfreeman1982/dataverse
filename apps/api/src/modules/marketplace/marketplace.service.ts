@@ -453,7 +453,8 @@ export class MarketplaceService {
     ];
 
     for (const pluginData of samplePlugins) {
-      await this.pluginRepository.save(pluginData);
+      const plugin = this.pluginRepository.create(pluginData as any);
+      await this.pluginRepository.save(plugin);
     }
   }
 }

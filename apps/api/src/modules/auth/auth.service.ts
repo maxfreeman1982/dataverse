@@ -1,104 +1,91 @@
-import {
-  Injectable,
-  UnauthorizedException,
-  ConflictException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { UsersService } from '../users/users.service';
-import { User } from '../users/user.entity';
-
-export interface JwtPayload {
-  sub: string;
-  email: string;
-  roles: string[];
-}
-
-export interface AuthResponse {
-  accessToken: string;
-  user: User;
-}
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import * as bcrypt from 'bcrypt';
+import { User } from './entities/user.entity';
+import { RegisterInput, LoginInput, AuthPayload } from './dto/auth.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly usersService: UsersService,
-    private readonly jwtService: JwtService,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
+    private jwtService: JwtService,
   ) {}
 
-  async register(data: {
-    email: string;
-    password: string;
-    username?: string;
-    firstName?: string;
-    lastName?: string;
-  }): Promise<AuthResponse> {
-    // Check if user exists
-    const existingUser = await this.usersService.findByEmail(data.email);
-    if (existingUser) {
-      throw new ConflictException('Email already registered');
+  async register(input: RegisterInput): Promise<AuthPayload> {
+    const existing = await this.userRepository.findOne({
+      where: { email: input.email },
+    });
+
+    if (existing) {
+      throw new ConflictException('Email already exists');
     }
 
-    // Create user
-    const user = await this.usersService.create(data);
+    const hashedPassword = await bcrypt.hash(input.password, 10);
 
-    // Generate token
-    const accessToken = this.generateToken(user);
+    const user = this.userRepository.create({
+      email: input.email,
+      password: hashedPassword,
+      firstName: input.firstName,
+      lastName: input.lastName,
+    });
 
-    return { accessToken, user };
+    const saved = await this.userRepository.save(user);
+
+    const accessToken = this.generateToken(saved);
+
+    return {
+      accessToken,
+      user: saved,
+    };
   }
 
-  async login(email: string, password: string): Promise<AuthResponse> {
-    // Find user
-    const user = await this.usersService.findByEmail(email);
+  async login(input: LoginInput): Promise<AuthPayload> {
+    const user = await this.userRepository.findOne({
+      where: { email: input.email },
+    });
+
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    // Validate password
-    const isPasswordValid = await this.usersService.validatePassword(
-      password,
-      user.password,
-    );
+    const isPasswordValid = await bcrypt.compare(input.password, user.password);
+
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid credentials');
     }
 
-    // Check if user is active
     if (!user.isActive) {
-      throw new UnauthorizedException('Account is disabled');
+      throw new UnauthorizedException('Account is inactive');
     }
 
-    // Update last login
-    await this.usersService.updateLastLogin(user.id);
+    user.lastLoginAt = new Date();
+    await this.userRepository.save(user);
 
-    // Generate token
     const accessToken = this.generateToken(user);
 
-    return { accessToken, user };
+    return {
+      accessToken,
+      user,
+    };
   }
 
-  async validateUser(payload: JwtPayload): Promise<User> {
-    const user = await this.usersService.findOne(payload.sub);
-    if (!user || !user.isActive) {
-      throw new UnauthorizedException('User not found or inactive');
+  async getCurrentUser(userId: string): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('User not found');
     }
+
     return user;
   }
 
   private generateToken(user: User): string {
-    const payload: JwtPayload = {
-      sub: user.id,
-      email: user.email,
-      roles: user.roles,
-    };
+    const payload = { sub: user.id, email: user.email };
     return this.jwtService.sign(payload);
-  }
-
-  async verifyToken(token: string): Promise<JwtPayload> {
-    try {
-      return this.jwtService.verify<JwtPayload>(token);
-    } catch (error) {
-      throw new UnauthorizedException('Invalid token');
-    }
   }
 }

@@ -164,7 +164,8 @@ export class MCPService {
 
       return result;
     } catch (error) {
-      throw new Error(`Tool execution failed: ${error.message}`);
+      const err = error as Error;
+      throw new Error(`Tool execution failed: ${err.message}`);
     }
   }
 
@@ -227,11 +228,12 @@ export class MCPService {
         toolsCount: tools.length,
       });
     } catch (error) {
+      const err = error as Error;
       server.status = MCPServerStatus.ERROR;
-      server.lastError = error.message;
+      server.lastError = err.message;
       await this.serverRepository.save(server);
 
-      console.error(`MCP server connection failed: ${error.message}`);
+      console.error(`MCP server connection failed: ${err.message}`);
     }
   }
 

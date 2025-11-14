@@ -7,7 +7,8 @@ import {
   UpdateDateColumn,
   JoinColumn,
 } from 'typeorm';
-import { ObjectType, Field, ID, registerEnumType, Int, GraphQLJSONObject } from '@nestjs/graphql';
+import { ObjectType, Field, ID, registerEnumType, Int } from '@nestjs/graphql';
+import GraphQLJSON from 'graphql-type-json';
 import { MobileApp } from './mobile-app.entity';
 import { User } from '../../auth/entities/user.entity';
 
@@ -105,7 +106,7 @@ export class MobilePushNotification {
   @Column({ nullable: true, name: 'deep_link' })
   deepLink?: string;
 
-  @Field(() => GraphQLJSONObject, { nullable: true })
+  @Field(() => GraphQLJSON, { nullable: true })
   @Column({ type: 'jsonb', nullable: true })
   data?: Record<string, any>; // Custom data payload
 

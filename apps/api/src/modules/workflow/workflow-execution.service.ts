@@ -69,7 +69,8 @@ export class WorkflowExecutionService {
 
     // Execute asynchronously
     this.runWorkflow(savedExecution.id, workflow, triggerData).catch((error) => {
-      this.logger.error(`Workflow execution failed: ${error.message}`, error);
+      const err = error as Error;
+      this.logger.error(`Workflow execution failed: ${err.message}`, error);
     });
 
     return savedExecution;
@@ -123,10 +124,11 @@ export class WorkflowExecutionService {
 
       this.logger.log(`Workflow ${workflow.id} executed successfully in ${duration}ms`);
     } catch (error) {
+      const err = error as Error;
       const duration = Date.now() - startTime;
       await this.executionRepository.update(executionId, {
         status: ExecutionStatus.FAILED,
-        error: error.message,
+        error: err.message,
         completedAt: new Date(),
         durationMs: duration,
       });
@@ -135,8 +137,8 @@ export class WorkflowExecutionService {
         executionId,
         'error',
         LogLevel.ERROR,
-        `Workflow failed: ${error.message}`,
-        { error: error.stack },
+        `Workflow failed: ${err.message}`,
+        { error: err.stack },
       );
 
       throw error;
@@ -241,12 +243,13 @@ export class WorkflowExecutionService {
 
       return result;
     } catch (error) {
+      const err = error as Error;
       await this.createLog(
         executionId,
         node.id,
         LogLevel.ERROR,
-        `Node failed: ${error.message}`,
-        { error: error.stack },
+        `Node failed: ${err.message}`,
+        { error: err.stack },
       );
       throw error;
     }
@@ -272,7 +275,7 @@ export class WorkflowExecutionService {
     const resolvedData = this.resolveVariables(recordData, context);
     const resolvedId = this.resolveVariables(recordId, context);
 
-    return await this.recordsService.update(tableId, resolvedId, resolvedData, 'system');
+    return await this.recordsService.update(tableId, resolvedId, resolvedData);
   }
 
   private async handleDeleteRecord(
@@ -282,7 +285,7 @@ export class WorkflowExecutionService {
     const { tableId, recordId } = data;
     const resolvedId = this.resolveVariables(recordId, context);
 
-    return await this.recordsService.delete(tableId, resolvedId, 'system');
+    return await this.recordsService.delete(resolvedId);
   }
 
   private async handleSendMessage(
