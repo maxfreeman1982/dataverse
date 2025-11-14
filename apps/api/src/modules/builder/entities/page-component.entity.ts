@@ -40,7 +40,7 @@ export class PageComponent {
 
   @Field()
   @Column({
-    type: 'enum',
+    type: 'simple-enum',
     enum: ComponentType,
   })
   type: ComponentType;

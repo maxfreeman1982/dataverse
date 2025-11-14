@@ -83,7 +83,7 @@ export class Plugin {
 
   @Field(() => PluginCategory)
   @Column({
-    type: 'enum',
+    type: 'simple-enum',
     enum: PluginCategory,
     default: PluginCategory.OTHER,
   })
@@ -91,7 +91,7 @@ export class Plugin {
 
   @Field(() => PluginStatus)
   @Column({
-    type: 'enum',
+    type: 'simple-enum',
     enum: PluginStatus,
     default: PluginStatus.DRAFT,
   })

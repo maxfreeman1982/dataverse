@@ -54,7 +54,7 @@ export class PluginInstallation {
 
   @Field(() => InstallationStatus)
   @Column({
-    type: 'enum',
+    type: 'simple-enum',
     enum: InstallationStatus,
     default: InstallationStatus.INSTALLING,
   })

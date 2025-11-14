@@ -26,7 +26,7 @@ export class MailResolver {
       input,
       user.id,
       user.email,
-      user.username || `${user.firstName} ${user.lastName}`,
+      `${user.firstName || ''} ${user.lastName || ''}`.trim() || user.email,
     );
   }
 

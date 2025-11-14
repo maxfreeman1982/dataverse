@@ -42,7 +42,7 @@ export class WorkflowLog {
 
   @Field(() => LogLevel)
   @Column({
-    type: 'enum',
+    type: 'simple-enum',
     enum: LogLevel,
     default: LogLevel.INFO,
   })

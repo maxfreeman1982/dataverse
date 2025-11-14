@@ -43,7 +43,7 @@ export class Page {
 
   @Field(() => PageStatus)
   @Column({
-    type: 'enum',
+    type: 'simple-enum',
     enum: PageStatus,
     default: PageStatus.DRAFT,
   })

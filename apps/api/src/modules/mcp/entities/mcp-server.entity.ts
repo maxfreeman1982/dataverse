@@ -50,7 +50,7 @@ export class MCPServer {
 
   @Field(() => MCPServerType)
   @Column({
-    type: 'enum',
+    type: 'simple-enum',
     enum: MCPServerType,
     default: MCPServerType.HTTP,
   })
@@ -70,7 +70,7 @@ export class MCPServer {
 
   @Field(() => MCPServerStatus)
   @Column({
-    type: 'enum',
+    type: 'simple-enum',
     enum: MCPServerStatus,
     default: MCPServerStatus.DISCONNECTED,
   })

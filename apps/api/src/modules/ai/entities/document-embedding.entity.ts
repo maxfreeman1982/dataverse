@@ -26,7 +26,7 @@ export class DocumentEmbedding {
 
   @Field()
   @Column({
-    type: 'enum',
+    type: 'simple-enum',
     enum: DocumentType,
     name: 'document_type',
   })

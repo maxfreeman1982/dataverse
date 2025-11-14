@@ -70,7 +70,7 @@ export class MobileApp {
 
   @Field(() => MobilePlatform)
   @Column({
-    type: 'enum',
+    type: 'simple-enum',
     enum: MobilePlatform,
     default: MobilePlatform.BOTH,
   })
@@ -78,7 +78,7 @@ export class MobileApp {
 
   @Field(() => AppStatus)
   @Column({
-    type: 'enum',
+    type: 'simple-enum',
     enum: AppStatus,
     default: AppStatus.DEVELOPMENT,
   })
@@ -86,7 +86,7 @@ export class MobileApp {
 
   @Field(() => AppCategory)
   @Column({
-    type: 'enum',
+    type: 'simple-enum',
     enum: AppCategory,
     default: AppCategory.BUSINESS,
   })
@@ -188,6 +188,6 @@ export class MobileApp {
   updatedAt: Date;
 
   @Field({ nullable: true })
-  @Column({ type: 'timestamp', nullable: true, name: 'published_at' })
+  @Column({ type: 'datetime', nullable: true, name: 'published_at' })
   publishedAt?: Date;
 }

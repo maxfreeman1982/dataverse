@@ -41,7 +41,7 @@ export class WorkflowExecution {
 
   @Field(() => ExecutionStatus)
   @Column({
-    type: 'enum',
+    type: 'simple-enum',
     enum: ExecutionStatus,
     default: ExecutionStatus.PENDING,
   })

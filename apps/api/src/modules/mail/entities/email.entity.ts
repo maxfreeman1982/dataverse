@@ -117,7 +117,7 @@ export class Email {
 
   @Field(() => EmailStatus)
   @Column({
-    type: 'enum',
+    type: 'simple-enum',
     enum: EmailStatus,
     default: EmailStatus.DRAFT,
   })
@@ -125,7 +125,7 @@ export class Email {
 
   @Field(() => EmailFolder)
   @Column({
-    type: 'enum',
+    type: 'simple-enum',
     enum: EmailFolder,
     default: EmailFolder.INBOX,
   })
@@ -133,7 +133,7 @@ export class Email {
 
   @Field(() => EmailPriority)
   @Column({
-    type: 'enum',
+    type: 'simple-enum',
     enum: EmailPriority,
     default: EmailPriority.NORMAL,
   })

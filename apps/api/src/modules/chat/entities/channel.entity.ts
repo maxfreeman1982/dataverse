@@ -41,7 +41,7 @@ export class Channel {
 
   @Field(() => ChannelType)
   @Column({
-    type: 'enum',
+    type: 'simple-enum',
     enum: ChannelType,
     default: ChannelType.PUBLIC,
   })

@@ -48,7 +48,7 @@ export class DatabaseColumn {
 
   @Field(() => ColumnType)
   @Column({
-    type: 'enum',
+    type: 'simple-enum',
     enum: ColumnType,
     default: ColumnType.TEXT,
   })

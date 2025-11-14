@@ -36,7 +36,7 @@ export class VideoCall {
 
   @Field(() => CallStatus)
   @Column({
-    type: 'enum',
+    type: 'simple-enum',
     enum: CallStatus,
     default: CallStatus.WAITING,
   })

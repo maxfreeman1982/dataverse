@@ -62,7 +62,7 @@ export class MobilePushNotification {
 
   @Field(() => NotificationStatus)
   @Column({
-    type: 'enum',
+    type: 'simple-enum',
     enum: NotificationStatus,
     default: NotificationStatus.DRAFT,
   })
@@ -70,7 +70,7 @@ export class MobilePushNotification {
 
   @Field(() => NotificationPriority)
   @Column({
-    type: 'enum',
+    type: 'simple-enum',
     enum: NotificationPriority,
     default: NotificationPriority.NORMAL,
   })
@@ -78,7 +78,7 @@ export class MobilePushNotification {
 
   @Field(() => NotificationTarget)
   @Column({
-    type: 'enum',
+    type: 'simple-enum',
     enum: NotificationTarget,
     default: NotificationTarget.ALL_USERS,
   })
@@ -112,11 +112,11 @@ export class MobilePushNotification {
 
   // Scheduling
   @Field({ nullable: true })
-  @Column({ type: 'timestamp', nullable: true, name: 'scheduled_at' })
+  @Column({ type: 'datetime', nullable: true, name: 'scheduled_at' })
   scheduledAt?: Date;
 
   @Field({ nullable: true })
-  @Column({ type: 'timestamp', nullable: true, name: 'sent_at' })
+  @Column({ type: 'datetime', nullable: true, name: 'sent_at' })
   sentAt?: Date;
 
   // Statistics

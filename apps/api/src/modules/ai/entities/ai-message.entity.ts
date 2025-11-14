@@ -42,7 +42,7 @@ export class AIMessage {
 
   @Field()
   @Column({
-    type: 'enum',
+    type: 'simple-enum',
     enum: MessageRole,
   })
   role: MessageRole;

@@ -43,7 +43,7 @@ export class Workflow {
 
   @Field(() => TriggerType)
   @Column({
-    type: 'enum',
+    type: 'simple-enum',
     enum: TriggerType,
     name: 'trigger_type',
   })

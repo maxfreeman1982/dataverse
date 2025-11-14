@@ -51,7 +51,7 @@ export class MobileAppBuild {
 
   @Field(() => BuildStatus)
   @Column({
-    type: 'enum',
+    type: 'simple-enum',
     enum: BuildStatus,
     default: BuildStatus.PENDING,
   })
@@ -59,7 +59,7 @@ export class MobileAppBuild {
 
   @Field(() => BuildType)
   @Column({
-    type: 'enum',
+    type: 'simple-enum',
     enum: BuildType,
     default: BuildType.DEVELOPMENT,
   })
@@ -151,14 +151,14 @@ export class MobileAppBuild {
   updatedAt: Date;
 
   @Field({ nullable: true })
-  @Column({ type: 'timestamp', nullable: true, name: 'started_at' })
+  @Column({ type: 'datetime', nullable: true, name: 'started_at' })
   startedAt?: Date;
 
   @Field({ nullable: true })
-  @Column({ type: 'timestamp', nullable: true, name: 'completed_at' })
+  @Column({ type: 'datetime', nullable: true, name: 'completed_at' })
   completedAt?: Date;
 
   @Field({ nullable: true })
-  @Column({ type: 'timestamp', nullable: true, name: 'published_at' })
+  @Column({ type: 'datetime', nullable: true, name: 'published_at' })
   publishedAt?: Date;
 }

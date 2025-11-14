@@ -18,6 +18,6 @@ import { RecordsResolver } from './records.resolver';
     RecordsService,
     RecordsResolver,
   ],
-  exports: [DatabaseService, RecordsService],
+  exports: [DatabaseService, RecordsService, TypeOrmModule],
 })
 export class DatabaseModule {}

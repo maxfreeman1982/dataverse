@@ -68,7 +68,7 @@ export class Document {
 
   @Field(() => DocumentStatus)
   @Column({
-    type: 'enum',
+    type: 'simple-enum',
     enum: DocumentStatus,
     default: DocumentStatus.DRAFT,
   })
@@ -76,7 +76,7 @@ export class Document {
 
   @Field(() => DocumentVisibility)
   @Column({
-    type: 'enum',
+    type: 'simple-enum',
     enum: DocumentVisibility,
     default: DocumentVisibility.PRIVATE,
   })
