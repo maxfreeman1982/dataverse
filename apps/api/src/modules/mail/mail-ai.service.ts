@@ -11,18 +11,32 @@ export interface EmailAnalysis {
 
 @Injectable()
 export class MailAIService {
-  private openai: OpenAI;
+  private openai: OpenAI | null = null;
 
   constructor() {
-    this.openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-    });
+    // Only initialize OpenAI if API key is provided
+    if (process.env.OPENAI_API_KEY) {
+      this.openai = new OpenAI({
+        apiKey: process.env.OPENAI_API_KEY,
+      });
+    }
   }
 
   async analyzeEmail(
     subject: string,
     body: string,
   ): Promise<EmailAnalysis> {
+    // Return mock data if OpenAI is not configured
+    if (!this.openai) {
+      return {
+        summary: 'Email analysis unavailable (OpenAI API key not configured)',
+        category: 'General',
+        sentimentScore: 0,
+        suggestedReplies: ['Thank you for your email.', 'I will get back to you soon.', 'Noted, thanks!'],
+        priority: 'normal',
+      };
+    }
+
     const prompt = `Analyze this email and provide:
 1. A brief summary (2-3 sentences)
 2. Category (e.g., Work, Personal, Marketing, Support, Urgent, FYI)
@@ -71,6 +85,11 @@ Respond in JSON format:
     originalBody: string,
     replyIntent: string,
   ): Promise<string> {
+    // Return mock data if OpenAI is not configured
+    if (!this.openai) {
+      return `Thank you for your email regarding "${originalSubject}". ${replyIntent}`;
+    }
+
     const prompt = `Generate a professional email reply based on:
 
 Original Subject: ${originalSubject}
