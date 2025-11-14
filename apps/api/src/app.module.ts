@@ -29,15 +29,19 @@ import { MobileAppModule } from './modules/mobile/mobile-app.module';
       envFilePath: ['.env.local', '.env'],
     }),
 
-    // TypeORM - SQLite (for development/testing)
+    // TypeORM - PostgreSQL
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        type: 'better-sqlite3',
-        database: configService.get('DB_DATABASE', 'dataverse.db'),
+        type: 'postgres',
+        host: configService.get('DB_HOST', 'localhost'),
+        port: configService.get('DB_PORT', 5432),
+        username: configService.get('DB_USERNAME', 'dataverse'),
+        password: configService.get('DB_PASSWORD', 'dataverse'),
+        database: configService.get('DB_DATABASE', 'dataverse'),
         entities: [join(__dirname, '**', '*.entity.{ts,js}')],
-        synchronize: true, // Auto-create tables in development
+        synchronize: configService.get('NODE_ENV') !== 'production',
         logging: configService.get('NODE_ENV') === 'development',
       }),
     }),
