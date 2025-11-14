@@ -19,6 +19,7 @@ import { MailModule } from './modules/mail/mail.module';
 import { OfficeModule } from './modules/office/office.module';
 import { MCPModule } from './modules/mcp/mcp.module';
 import { MarketplaceModule } from './modules/marketplace/marketplace.module';
+import { MobileAppModule } from './modules/mobile/mobile-app.module';
 
 @Module({
   imports: [
@@ -70,6 +71,7 @@ import { MarketplaceModule } from './modules/marketplace/marketplace.module';
     OfficeModule,
     MCPModule,
     MarketplaceModule,
+    MobileAppModule,
   ],
 })
 export class AppModule {}

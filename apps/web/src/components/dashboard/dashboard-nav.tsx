@@ -13,6 +13,7 @@ import {
   Settings,
   GitBranch,
   Package,
+  Smartphone,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -23,6 +24,7 @@ const navigation = [
   { name: 'Chat', href: '/dashboard/chat', icon: MessageSquare },
   { name: 'AI Hub', href: '/dashboard/ai', icon: Bot },
   { name: 'Marketplace', href: '/dashboard/marketplace', icon: Package },
+  { name: 'Mobile Apps', href: '/dashboard/mobile', icon: Smartphone },
   { name: 'Workflows', href: '/dashboard/workflows', icon: GitBranch },
   { name: 'Mail', href: '/mail', icon: Mail },
   { name: 'Docs', href: '/docs', icon: FileText },
