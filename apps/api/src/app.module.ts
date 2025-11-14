@@ -17,6 +17,7 @@ import { WorkflowModule } from './modules/workflow/workflow.module';
 import { VideoModule } from './modules/video/video.module';
 import { MailModule } from './modules/mail/mail.module';
 import { OfficeModule } from './modules/office/office.module';
+import { MCPModule } from './modules/mcp/mcp.module';
 
 @Module({
   imports: [
@@ -66,6 +67,7 @@ import { OfficeModule } from './modules/office/office.module';
     VideoModule,
     MailModule,
     OfficeModule,
+    MCPModule,
   ],
 })
 export class AppModule {}

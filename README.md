@@ -26,6 +26,7 @@ A modular, intelligent, and secure ecosystem combining no-code tools, databases,
 - ✅ **Video Calls (WebRTC)** - Real-time video conferencing with screen sharing
 - ✅ **Mail AI** - Intelligent email client with AI-powered features
 - ✅ **Office Suite** - Documents, spreadsheets, and presentations
+- ✅ **MCP Integration** - Model Context Protocol for AI extensibility
 
 ## 🏗️ Architecture
 
@@ -159,6 +160,32 @@ dataverse/
   - Simple slide layouts
   - Auto-save with real-time updates
   - Slide ordering and deletion
+
+### 11. MCP Integration (Model Context Protocol)
+- **Server Management** - Connect to external MCP servers
+  - HTTP, WebSocket, and STDIO protocol support
+  - Server status monitoring (connected, disconnected, error)
+  - Enable/disable servers dynamically
+  - Auto-discovery of available tools
+  - Connection health tracking
+- **Tool Discovery** - Automatic tool detection and schema parsing
+  - JSON Schema support for tool parameters
+  - Tool categorization with tags
+  - Usage statistics tracking
+  - Tool enable/disable controls
+- **Tool Execution** - Execute external tools with parameter validation
+  - Dynamic parameter forms based on JSON Schema
+  - Real-time execution with results
+  - Error handling and retry logic
+  - Execution history and analytics
+- **AI Integration** - Extend AI capabilities with custom tools
+  - Web search integration
+  - Code interpreter support
+  - Image generation capabilities
+  - File operations and data processing
+  - Custom tool development support
+- **Public/Private Servers** - Share servers with team or keep private
+- **Mock Tools** - Built-in demo tools for testing (web_search, code_interpreter, image_generator, file_reader)
 
 ## 🚀 Quick Start
 
@@ -348,6 +375,7 @@ query {
 - `src/modules/video/` - Video Calls (WebRTC signaling, call management)
 - `src/modules/mail/` - Mail AI (email management, AI analysis, smart features)
 - `src/modules/office/` - Office Suite (documents, spreadsheets, presentations)
+- `src/modules/mcp/` - MCP Integration (Model Context Protocol, tool execution)
 - `src/modules/ai/` - AI Assistant (OpenAI integration, RAG, embeddings)
 - `src/modules/workflow/` - Workflow Automation (execution engine, triggers)
 - `src/modules/websocket/` - Real-time collaboration
@@ -471,7 +499,7 @@ See [DATAVERSE_OS_ARCHITECTURE.md](./DATAVERSE_OS_ARCHITECTURE.md) for complete 
 - [x] **Video calls** (WebRTC multi-party calls, screen sharing) ✅
 - [x] **Mail AI** (intelligent email with AI summaries, smart replies, auto-categorization) ✅
 - [x] **Office Suite** (documents, spreadsheets, presentations with real-time sync) ✅
-- [ ] MCP (Model Context Protocol) integration
+- [x] **MCP Integration** (Model Context Protocol, external tool execution, AI extensibility) ✅
 - [ ] Mobile apps
 - [ ] Marketplace
 
