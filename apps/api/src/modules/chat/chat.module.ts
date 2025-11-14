@@ -13,6 +13,6 @@ import { WebsocketModule } from '../websocket/websocket.module';
     WebsocketModule,
   ],
   providers: [ChatService, ChatResolver],
-  exports: [ChatService],
+  exports: [ChatService, TypeOrmModule],
 })
 export class ChatModule {}

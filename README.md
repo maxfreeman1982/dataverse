@@ -21,6 +21,7 @@ A modular, intelligent, and secure ecosystem combining no-code tools, databases,
 - ✅ **AI Integration** - GPT-powered assistant (Cmd+K)
 - ✅ **No-Code Builder** - Visual page builder with 12+ components
 - ✅ **Chat Module** - Real-time messaging with channels and DMs
+- ✅ **Advanced AI (RAG)** - GPT-4 with semantic search & conversation history
 
 ## 🏗️ Architecture
 
@@ -79,6 +80,18 @@ dataverse/
 - **Member management** - Add/remove members from channels
 - **Message history** - Full message history with pagination
 - **Real-time updates** - Instant message delivery
+
+### 6. Advanced AI with RAG
+- **GPT-4 Turbo** - State-of-the-art language model
+- **RAG (Retrieval Augmented Generation)** - Semantic search through workspace content
+- **Document Embeddings** - Automatic indexing of tables, pages, and messages
+- **Conversation History** - Persistent AI chat sessions
+- **Context-Aware Responses** - AI understands your workspace data
+- **Smart Workspace Search** - Find relevant information using natural language
+- **Analytics Dashboard** - Track AI usage, tokens, and indexed documents
+- **One-Click Reindexing** - Keep embeddings up to date
+- **Pinnable Conversations** - Organize important AI interactions
+- **Real-time WebSocket Updates** - Instant AI message delivery
 
 ## 🚀 Quick Start
 
@@ -380,7 +393,7 @@ See [DATAVERSE_OS_ARCHITECTURE.md](./DATAVERSE_OS_ARCHITECTURE.md) for complete 
 ### Phase 2 (Current) - Core Features
 - [x] **No-Code Builder** (visual page editor with 12+ components) ✅
 - [x] **Communication module** (real-time chat with channels) ✅
-- [ ] Advanced AI features (RAG, fine-tuning)
+- [x] **Advanced AI features** (RAG with GPT-4 Turbo, embeddings, conversation history) ✅
 - [ ] Video calls (WebRTC integration)
 - [ ] Suite bureautique (docs, spreadsheet)
 - [ ] Mail AI

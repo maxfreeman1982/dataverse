@@ -12,6 +12,6 @@ import { WebsocketModule } from '../websocket/websocket.module';
     WebsocketModule,
   ],
   providers: [BuilderService, BuilderResolver],
-  exports: [BuilderService],
+  exports: [BuilderService, TypeOrmModule],
 })
 export class BuilderModule {}

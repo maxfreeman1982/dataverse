@@ -19,9 +19,9 @@ const navigation = [
   { name: 'Database', href: '/database', icon: Database },
   { name: 'Builder', href: '/dashboard/builder', icon: Zap },
   { name: 'Chat', href: '/dashboard/chat', icon: MessageSquare },
+  { name: 'AI Hub', href: '/dashboard/ai', icon: Bot },
   { name: 'Mail', href: '/mail', icon: Mail },
   { name: 'Docs', href: '/docs', icon: FileText },
-  { name: 'AI Hub', href: '/ai', icon: Bot },
 ]
 
 export function DashboardNav() {
