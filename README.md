@@ -25,6 +25,7 @@ A modular, intelligent, and secure ecosystem combining no-code tools, databases,
 - ✅ **Workflow Automation** - Automate tasks with visual workflow builder
 - ✅ **Video Calls (WebRTC)** - Real-time video conferencing with screen sharing
 - ✅ **Mail AI** - Intelligent email client with AI-powered features
+- ✅ **Office Suite** - Documents, spreadsheets, and presentations
 
 ## 🏗️ Architecture
 
@@ -136,6 +137,28 @@ dataverse/
 - **Real-time Updates** - Instant email notifications via WebSocket
 - **Draft Saving** - Save emails as drafts
 - **Labels & Tags** - Organize emails with custom labels
+
+### 10. Office Suite
+- **Documents** - Rich text editor for creating and editing documents
+  - Auto-save with debounced updates
+  - Word count and character count tracking
+  - Simple rich text formatting
+  - Real-time collaboration ready
+  - Document versioning and history
+- **Spreadsheets** - Full-featured spreadsheet application
+  - Grid-based cell editing
+  - Multiple sheets per workbook
+  - Formula bar for advanced editing
+  - 26 columns × 100 rows per sheet
+  - Cell selection and highlighting
+  - Auto-save functionality
+- **Presentations** - Slide-based presentation builder
+  - Multi-slide management
+  - Slide thumbnails sidebar
+  - Presentation mode with navigation
+  - Simple slide layouts
+  - Auto-save with real-time updates
+  - Slide ordering and deletion
 
 ## 🚀 Quick Start
 
@@ -324,6 +347,7 @@ query {
 - `src/modules/chat/` - Communication (channels, messages, real-time chat)
 - `src/modules/video/` - Video Calls (WebRTC signaling, call management)
 - `src/modules/mail/` - Mail AI (email management, AI analysis, smart features)
+- `src/modules/office/` - Office Suite (documents, spreadsheets, presentations)
 - `src/modules/ai/` - AI Assistant (OpenAI integration, RAG, embeddings)
 - `src/modules/workflow/` - Workflow Automation (execution engine, triggers)
 - `src/modules/websocket/` - Real-time collaboration
@@ -446,7 +470,7 @@ See [DATAVERSE_OS_ARCHITECTURE.md](./DATAVERSE_OS_ARCHITECTURE.md) for complete 
 ### Phase 3 (Current) - Advanced Features
 - [x] **Video calls** (WebRTC multi-party calls, screen sharing) ✅
 - [x] **Mail AI** (intelligent email with AI summaries, smart replies, auto-categorization) ✅
-- [ ] Suite bureautique (docs, spreadsheet, presentations)
+- [x] **Office Suite** (documents, spreadsheets, presentations with real-time sync) ✅
 - [ ] MCP (Model Context Protocol) integration
 - [ ] Mobile apps
 - [ ] Marketplace

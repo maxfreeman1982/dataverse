@@ -16,6 +16,7 @@ import { ChatModule } from './modules/chat/chat.module';
 import { WorkflowModule } from './modules/workflow/workflow.module';
 import { VideoModule } from './modules/video/video.module';
 import { MailModule } from './modules/mail/mail.module';
+import { OfficeModule } from './modules/office/office.module';
 
 @Module({
   imports: [
@@ -64,6 +65,7 @@ import { MailModule } from './modules/mail/mail.module';
     WorkflowModule,
     VideoModule,
     MailModule,
+    OfficeModule,
   ],
 })
 export class AppModule {}
