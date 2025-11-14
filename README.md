@@ -24,6 +24,7 @@ A modular, intelligent, and secure ecosystem combining no-code tools, databases,
 - ✅ **Advanced AI (RAG)** - GPT-4 with semantic search & conversation history
 - ✅ **Workflow Automation** - Automate tasks with visual workflow builder
 - ✅ **Video Calls (WebRTC)** - Real-time video conferencing with screen sharing
+- ✅ **Mail AI** - Intelligent email client with AI-powered features
 
 ## 🏗️ Architecture
 
@@ -120,6 +121,21 @@ dataverse/
 - **Automatic Grid Layout** - Responsive video grid that adapts to participant count
 - **STUN Server Support** - NAT traversal with Google STUN servers
 - **Connection State Management** - Automatic reconnection and cleanup
+
+### 9. Mail AI
+- **Intelligent Email Client** - Full-featured email management
+- **AI-Powered Summaries** - Automatic email summarization with GPT-4
+- **Smart Categorization** - Auto-categorize emails (Work, Personal, Marketing, etc.)
+- **Sentiment Analysis** - Understand email tone and priority
+- **Smart Replies** - AI-generated suggested responses
+- **AI Compose** - Generate professional emails from natural language prompts
+- **Email Threading** - Conversation-based email organization
+- **Folder Management** - Inbox, Sent, Drafts, Archive, Trash
+- **Star & Priority** - Mark important emails
+- **Search** - Full-text email search
+- **Real-time Updates** - Instant email notifications via WebSocket
+- **Draft Saving** - Save emails as drafts
+- **Labels & Tags** - Organize emails with custom labels
 
 ## 🚀 Quick Start
 
@@ -307,6 +323,7 @@ query {
 - `src/modules/builder/` - No-Code Builder (pages & components)
 - `src/modules/chat/` - Communication (channels, messages, real-time chat)
 - `src/modules/video/` - Video Calls (WebRTC signaling, call management)
+- `src/modules/mail/` - Mail AI (email management, AI analysis, smart features)
 - `src/modules/ai/` - AI Assistant (OpenAI integration, RAG, embeddings)
 - `src/modules/workflow/` - Workflow Automation (execution engine, triggers)
 - `src/modules/websocket/` - Real-time collaboration
@@ -428,8 +445,8 @@ See [DATAVERSE_OS_ARCHITECTURE.md](./DATAVERSE_OS_ARCHITECTURE.md) for complete 
 
 ### Phase 3 (Current) - Advanced Features
 - [x] **Video calls** (WebRTC multi-party calls, screen sharing) ✅
+- [x] **Mail AI** (intelligent email with AI summaries, smart replies, auto-categorization) ✅
 - [ ] Suite bureautique (docs, spreadsheet, presentations)
-- [ ] Mail AI
 - [ ] MCP (Model Context Protocol) integration
 - [ ] Mobile apps
 - [ ] Marketplace
