@@ -12,6 +12,7 @@ import {
   Bot,
   Settings,
   GitBranch,
+  Package,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -21,6 +22,7 @@ const navigation = [
   { name: 'Builder', href: '/dashboard/builder', icon: Zap },
   { name: 'Chat', href: '/dashboard/chat', icon: MessageSquare },
   { name: 'AI Hub', href: '/dashboard/ai', icon: Bot },
+  { name: 'Marketplace', href: '/dashboard/marketplace', icon: Package },
   { name: 'Workflows', href: '/dashboard/workflows', icon: GitBranch },
   { name: 'Mail', href: '/mail', icon: Mail },
   { name: 'Docs', href: '/docs', icon: FileText },

@@ -18,6 +18,7 @@ import { VideoModule } from './modules/video/video.module';
 import { MailModule } from './modules/mail/mail.module';
 import { OfficeModule } from './modules/office/office.module';
 import { MCPModule } from './modules/mcp/mcp.module';
+import { MarketplaceModule } from './modules/marketplace/marketplace.module';
 
 @Module({
   imports: [
@@ -68,6 +69,7 @@ import { MCPModule } from './modules/mcp/mcp.module';
     MailModule,
     OfficeModule,
     MCPModule,
+    MarketplaceModule,
   ],
 })
 export class AppModule {}
