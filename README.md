@@ -22,6 +22,7 @@ A modular, intelligent, and secure ecosystem combining no-code tools, databases,
 - ✅ **No-Code Builder** - Visual page builder with 12+ components
 - ✅ **Chat Module** - Real-time messaging with channels and DMs
 - ✅ **Advanced AI (RAG)** - GPT-4 with semantic search & conversation history
+- ✅ **Workflow Automation** - Automate tasks with visual workflow builder
 
 ## 🏗️ Architecture
 
@@ -92,6 +93,18 @@ dataverse/
 - **One-Click Reindexing** - Keep embeddings up to date
 - **Pinnable Conversations** - Organize important AI interactions
 - **Real-time WebSocket Updates** - Instant AI message delivery
+
+### 7. Workflow Automation
+- **Visual Workflow Builder** - Create automation without code
+- **Multiple Trigger Types** - Manual, record events, schedule, webhook
+- **9 Action Types** - CRUD operations, messages, AI tasks, conditions, delays, webhooks
+- **Conditional Branching** - Execute different paths based on conditions
+- **Variable Resolution** - Dynamic data using {{variable.path}} syntax
+- **Async Execution** - Non-blocking workflow runs
+- **Execution Logs** - Detailed logs for debugging
+- **Execution History** - Track all workflow runs with status
+- **Real-time Status** - See workflow execution status live
+- **Enable/Disable** - Control workflow activation
 
 ## 🚀 Quick Start
 
@@ -390,17 +403,16 @@ See [DATAVERSE_OS_ARCHITECTURE.md](./DATAVERSE_OS_ARCHITECTURE.md) for complete 
 - [x] **AI Integration (OpenAI)**
 - [x] **Command Bar (Cmd+K)**
 
-### Phase 2 (Current) - Core Features
+### Phase 2 (Completed) ✅ - Core Features
 - [x] **No-Code Builder** (visual page editor with 12+ components) ✅
 - [x] **Communication module** (real-time chat with channels) ✅
 - [x] **Advanced AI features** (RAG with GPT-4 Turbo, embeddings, conversation history) ✅
-- [ ] Video calls (WebRTC integration)
-- [ ] Suite bureautique (docs, spreadsheet)
-- [ ] Mail AI
-- [ ] Workflow automation engine
+- [x] **Workflow automation** (visual builder, 9 action types, conditional logic) ✅
 
-### Phase 3 - Advanced Features
-- [ ] Workflow automation
+### Phase 3 (Current) - Advanced Features
+- [ ] Video calls (WebRTC integration)
+- [ ] Suite bureautique (docs, spreadsheet, presentations)
+- [ ] Mail AI
 - [ ] MCP (Model Context Protocol) integration
 - [ ] Mobile apps
 - [ ] Marketplace

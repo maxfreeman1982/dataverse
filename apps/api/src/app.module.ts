@@ -13,6 +13,7 @@ import { WebsocketModule } from './modules/websocket/websocket.module';
 import { AIModule } from './modules/ai/ai.module';
 import { BuilderModule } from './modules/builder/builder.module';
 import { ChatModule } from './modules/chat/chat.module';
+import { WorkflowModule } from './modules/workflow/workflow.module';
 
 @Module({
   imports: [
@@ -58,6 +59,7 @@ import { ChatModule } from './modules/chat/chat.module';
     AIModule,
     BuilderModule,
     ChatModule,
+    WorkflowModule,
   ],
 })
 export class AppModule {}
