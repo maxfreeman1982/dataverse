@@ -33,7 +33,7 @@ export class EmailThread {
   subject: string;
 
   @Field(() => [String])
-  @Column({ type: 'jsonb' })
+  @Column({ type: 'simple-json' })
   participants: string[];
 
   @Field(() => [Email], { nullable: true })

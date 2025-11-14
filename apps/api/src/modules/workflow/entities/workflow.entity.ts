@@ -50,11 +50,11 @@ export class Workflow {
   triggerType: TriggerType;
 
   @Field(() => GraphQLJSONObject)
-  @Column({ type: 'jsonb', name: 'trigger_config' })
+  @Column({ type: 'simple-json', name: 'trigger_config' })
   triggerConfig: Record<string, any>;
 
   @Field(() => GraphQLJSONObject)
-  @Column({ type: 'jsonb', default: '[]' })
+  @Column({ type: 'simple-json', default: '[]' })
   nodes: Array<{
     id: string;
     type: string;
@@ -63,7 +63,7 @@ export class Workflow {
   }>;
 
   @Field(() => GraphQLJSONObject)
-  @Column({ type: 'jsonb', default: '[]' })
+  @Column({ type: 'simple-json', default: '[]' })
   edges: Array<{
     id: string;
     source: string;

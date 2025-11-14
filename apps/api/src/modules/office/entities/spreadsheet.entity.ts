@@ -25,7 +25,7 @@ export class Spreadsheet {
   title: string;
 
   @Field(() => GraphQLJSONObject)
-  @Column({ type: 'jsonb', default: '[]' })
+  @Column({ type: 'simple-json', default: '[]' })
   sheets: Array<{
     id: string;
     name: string;
@@ -61,7 +61,7 @@ export class Spreadsheet {
   description?: string;
 
   @Field(() => [String], { nullable: true })
-  @Column({ type: 'jsonb', nullable: true })
+  @Column({ type: 'simple-json', nullable: true })
   tags?: string[];
 
   @Field(() => Int)

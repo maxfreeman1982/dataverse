@@ -25,7 +25,7 @@ export class Presentation {
   title: string;
 
   @Field(() => GraphQLJSONObject)
-  @Column({ type: 'jsonb', default: '[]' })
+  @Column({ type: 'simple-json', default: '[]' })
   slides: Array<{
     id: string;
     order: number;
@@ -62,7 +62,7 @@ export class Presentation {
   description?: string;
 
   @Field(() => [String], { nullable: true })
-  @Column({ type: 'jsonb', nullable: true })
+  @Column({ type: 'simple-json', nullable: true })
   tags?: string[];
 
   @Field(() => Int)

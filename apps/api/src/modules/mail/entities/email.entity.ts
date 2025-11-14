@@ -83,15 +83,15 @@ export class Email {
   fromName?: string;
 
   @Field(() => [String])
-  @Column({ type: 'jsonb', name: 'to_addresses' })
+  @Column({ type: 'simple-json', name: 'to_addresses' })
   toAddresses: string[];
 
   @Field(() => [String], { nullable: true })
-  @Column({ type: 'jsonb', name: 'cc_addresses', nullable: true })
+  @Column({ type: 'simple-json', name: 'cc_addresses', nullable: true })
   ccAddresses?: string[];
 
   @Field(() => [String], { nullable: true })
-  @Column({ type: 'jsonb', name: 'bcc_addresses', nullable: true })
+  @Column({ type: 'simple-json', name: 'bcc_addresses', nullable: true })
   bccAddresses?: string[];
 
   @Field()
@@ -107,7 +107,7 @@ export class Email {
   htmlBody?: string;
 
   @Field(() => GraphQLJSONObject, { nullable: true })
-  @Column({ type: 'jsonb', nullable: true })
+  @Column({ type: 'simple-json', nullable: true })
   attachments?: Array<{
     name: string;
     size: number;
@@ -152,7 +152,7 @@ export class Email {
   isImportant: boolean;
 
   @Field(() => [String], { nullable: true })
-  @Column({ type: 'jsonb', nullable: true })
+  @Column({ type: 'simple-json', nullable: true })
   labels?: string[];
 
   // AI-generated fields
@@ -169,7 +169,7 @@ export class Email {
   aiSentimentScore?: number;
 
   @Field(() => [String], { nullable: true })
-  @Column({ type: 'jsonb', nullable: true, name: 'ai_suggested_replies' })
+  @Column({ type: 'simple-json', nullable: true, name: 'ai_suggested_replies' })
   aiSuggestedReplies?: string[];
 
   @Field({ nullable: true })

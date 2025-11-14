@@ -45,7 +45,7 @@ export class Document {
   title: string;
 
   @Field(() => GraphQLJSONObject)
-  @Column({ type: 'jsonb', default: '{}' })
+  @Column({ type: 'simple-json', default: '{}' })
   content: any; // TipTap/ProseMirror JSON content
 
   @Field()
@@ -91,11 +91,11 @@ export class Document {
   description?: string;
 
   @Field(() => [String], { nullable: true })
-  @Column({ type: 'jsonb', nullable: true })
+  @Column({ type: 'simple-json', nullable: true })
   tags?: string[];
 
   @Field(() => GraphQLJSONObject, { nullable: true })
-  @Column({ type: 'jsonb', nullable: true })
+  @Column({ type: 'simple-json', nullable: true })
   metadata?: Record<string, any>;
 
   @Field()

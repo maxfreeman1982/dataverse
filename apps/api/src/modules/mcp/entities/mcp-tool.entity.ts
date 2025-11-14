@@ -36,15 +36,15 @@ export class MCPTool {
   description?: string;
 
   @Field(() => GraphQLJSONObject)
-  @Column({ type: 'jsonb', default: '{}' })
+  @Column({ type: 'simple-json', default: '{}' })
   schema: Record<string, any>; // JSON Schema for parameters
 
   @Field(() => [String], { nullable: true })
-  @Column({ type: 'jsonb', nullable: true })
+  @Column({ type: 'simple-json', nullable: true })
   tags?: string[];
 
   @Field(() => GraphQLJSONObject, { nullable: true })
-  @Column({ type: 'jsonb', nullable: true })
+  @Column({ type: 'simple-json', nullable: true })
   examples?: Array<{
     input: Record<string, any>;
     output: any;

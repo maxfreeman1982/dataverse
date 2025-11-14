@@ -53,7 +53,7 @@ export class WorkflowLog {
   message: string;
 
   @Field(() => GraphQLJSONObject, { nullable: true })
-  @Column({ type: 'jsonb', nullable: true })
+  @Column({ type: 'simple-json', nullable: true })
   data?: Record<string, any>;
 
   @Field()

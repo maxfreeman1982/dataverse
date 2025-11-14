@@ -102,11 +102,11 @@ export class Plugin {
   iconUrl?: string;
 
   @Field(() => [String], { nullable: true })
-  @Column({ type: 'jsonb', nullable: true })
+  @Column({ type: 'simple-json', nullable: true })
   screenshots?: string[];
 
   @Field(() => [String], { nullable: true })
-  @Column({ type: 'jsonb', nullable: true })
+  @Column({ type: 'simple-json', nullable: true })
   tags?: string[];
 
   @Field()
@@ -126,11 +126,11 @@ export class Plugin {
   repositoryUrl?: string;
 
   @Field(() => GraphQLJSONObject, { nullable: true })
-  @Column({ type: 'jsonb', nullable: true })
+  @Column({ type: 'simple-json', nullable: true })
   permissions?: Record<string, any>;
 
   @Field(() => GraphQLJSONObject, { nullable: true })
-  @Column({ type: 'jsonb', nullable: true })
+  @Column({ type: 'simple-json', nullable: true })
   config?: Record<string, any>;
 
   @Field(() => Float)

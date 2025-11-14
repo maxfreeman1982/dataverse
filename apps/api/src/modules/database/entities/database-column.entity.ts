@@ -79,7 +79,7 @@ export class DatabaseColumn {
   defaultValue: string;
 
   @Field()
-  @Column({ type: 'jsonb', default: {} })
+  @Column({ type: 'simple-json', default: {} })
   options: Record<string, any>;
 
   @ManyToOne(() => DatabaseTable, (table) => table.columns, {

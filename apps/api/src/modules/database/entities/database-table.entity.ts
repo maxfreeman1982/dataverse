@@ -63,6 +63,6 @@ export class DatabaseTable {
   updatedAt: Date;
 
   @Field()
-  @Column({ type: 'jsonb', default: {} })
+  @Column({ type: 'simple-json', default: {} })
   metadata: Record<string, any>;
 }

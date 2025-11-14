@@ -86,11 +86,11 @@ export class MobilePushNotification {
 
   // Targeting
   @Field(() => [String], { nullable: true })
-  @Column({ type: 'jsonb', nullable: true, name: 'target_user_ids' })
+  @Column({ type: 'simple-json', nullable: true, name: 'target_user_ids' })
   targetUserIds?: string[];
 
   @Field(() => [String], { nullable: true })
-  @Column({ type: 'jsonb', nullable: true, name: 'target_segments' })
+  @Column({ type: 'simple-json', nullable: true, name: 'target_segments' })
   targetSegments?: string[];
 
   // Content
@@ -107,7 +107,7 @@ export class MobilePushNotification {
   deepLink?: string;
 
   @Field(() => GraphQLJSON, { nullable: true })
-  @Column({ type: 'jsonb', nullable: true })
+  @Column({ type: 'simple-json', nullable: true })
   data?: Record<string, any>; // Custom data payload
 
   // Scheduling

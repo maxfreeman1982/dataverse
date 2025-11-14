@@ -29,7 +29,7 @@ export class DatabaseRecord {
   tableId: string;
 
   @Field(() => GraphQLJSONObject)
-  @Column({ type: 'jsonb' })
+  @Column({ type: 'simple-json' })
   data: Record<string, any>;
 
   @Field(() => User, { nullable: true })

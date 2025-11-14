@@ -65,7 +65,7 @@ export class PluginInstallation {
   isEnabled: boolean;
 
   @Field(() => GraphQLJSONObject, { nullable: true })
-  @Column({ type: 'jsonb', nullable: true })
+  @Column({ type: 'simple-json', nullable: true })
   settings?: Record<string, any>;
 
   @Field({ nullable: true })

@@ -61,11 +61,11 @@ export class MCPServer {
   url: string;
 
   @Field(() => GraphQLJSONObject, { nullable: true })
-  @Column({ type: 'jsonb', nullable: true })
+  @Column({ type: 'simple-json', nullable: true })
   config?: Record<string, any>;
 
   @Field(() => GraphQLJSONObject, { nullable: true })
-  @Column({ type: 'jsonb', nullable: true })
+  @Column({ type: 'simple-json', nullable: true })
   headers?: Record<string, string>;
 
   @Field(() => MCPServerStatus)

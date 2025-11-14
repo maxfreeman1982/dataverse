@@ -52,11 +52,11 @@ export class AIMessage {
   content: string;
 
   @Field(() => GraphQLJSONObject, { nullable: true })
-  @Column({ type: 'jsonb', nullable: true })
+  @Column({ type: 'simple-json', nullable: true })
   metadata?: Record<string, any>;
 
   @Field(() => [String], { nullable: true })
-  @Column({ type: 'jsonb', nullable: true, name: 'retrieved_docs' })
+  @Column({ type: 'simple-json', nullable: true, name: 'retrieved_docs' })
   retrievedDocs?: string[];
 
   @Field(() => Int, { nullable: true })

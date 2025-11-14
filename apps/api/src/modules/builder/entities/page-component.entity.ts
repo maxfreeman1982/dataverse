@@ -46,11 +46,11 @@ export class PageComponent {
   type: ComponentType;
 
   @Field(() => GraphQLJSONObject)
-  @Column({ type: 'jsonb', default: {} })
+  @Column({ type: 'simple-json', default: {} })
   properties: Record<string, any>;
 
   @Field(() => GraphQLJSONObject, { nullable: true })
-  @Column({ type: 'jsonb', nullable: true })
+  @Column({ type: 'simple-json', nullable: true })
   style?: Record<string, any>;
 
   @Field(() => Int)

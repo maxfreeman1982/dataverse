@@ -48,11 +48,11 @@ export class WorkflowExecution {
   status: ExecutionStatus;
 
   @Field(() => GraphQLJSONObject, { nullable: true })
-  @Column({ type: 'jsonb', nullable: true, name: 'trigger_data' })
+  @Column({ type: 'simple-json', nullable: true, name: 'trigger_data' })
   triggerData?: Record<string, any>;
 
   @Field(() => GraphQLJSONObject, { nullable: true })
-  @Column({ type: 'jsonb', nullable: true })
+  @Column({ type: 'simple-json', nullable: true })
   result?: Record<string, any>;
 
   @Field({ nullable: true })

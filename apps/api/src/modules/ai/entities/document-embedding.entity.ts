@@ -41,11 +41,11 @@ export class DocumentEmbedding {
   content: string;
 
   // Store as JSON array for PostgreSQL without pgvector extension
-  @Column({ type: 'jsonb', nullable: true })
+  @Column({ type: 'simple-json', nullable: true })
   embedding?: number[];
 
   @Field(() => GraphQLJSONObject, { nullable: true })
-  @Column({ type: 'jsonb', nullable: true })
+  @Column({ type: 'simple-json', nullable: true })
   metadata?: Record<string, any>;
 
   @Field()
