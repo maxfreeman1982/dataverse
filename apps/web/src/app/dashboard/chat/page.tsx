@@ -2,7 +2,9 @@
 
 import { useQuery, useMutation } from '@apollo/client'
 import { GET_CHANNELS, GET_MESSAGES, CREATE_CHANNEL, CREATE_MESSAGE, EMIT_TYPING } from '@/graphql/chat'
+import { CREATE_VIDEO_CALL } from '@/graphql/video'
 import { useState, useEffect, useRef } from 'react'
+import { useRouter } from 'next/navigation'
 import { useToast } from '@/hooks/use-toast'
 import { useChatWebSocket } from '@/hooks/use-chat-websocket'
 import { Button } from '@/components/ui/button'
@@ -19,6 +21,7 @@ import {
   MoreVertical,
   Users,
   MessageSquare,
+  Video,
 } from 'lucide-react'
 import {
   Dialog,
@@ -72,6 +75,7 @@ interface Message {
 
 export default function ChatPage() {
   const { toast } = useToast()
+  const router = useRouter()
   const [selectedChannel, setSelectedChannel] = useState<Channel | null>(null)
   const [createDialogOpen, setCreateDialogOpen] = useState(false)
   const [messageInput, setMessageInput] = useState('')
@@ -103,6 +107,19 @@ export default function ChatPage() {
     },
     onError: (error) => {
       toast({ title: 'Error', description: error.message, variant: 'destructive' })
+    },
+  })
+
+  const [createVideoCall] = useMutation(CREATE_VIDEO_CALL, {
+    onCompleted: (data) => {
+      router.push(`/dashboard/video/${data.createVideoCall.id}`)
+    },
+    onError: (error) => {
+      toast({
+        title: 'Error',
+        description: error.message,
+        variant: 'destructive',
+      })
     },
   })
 
@@ -189,6 +206,19 @@ export default function ChatPage() {
     }, 3000)
   }
 
+  const handleStartCall = async () => {
+    if (!selectedChannel) return
+
+    await createVideoCall({
+      variables: {
+        input: {
+          name: `${selectedChannel.name} Call`,
+          channelId: selectedChannel.id,
+        },
+      },
+    })
+  }
+
   const channels: Channel[] = channelsData?.channels || []
   const messages: Message[] = messagesData?.messages || []
 
@@ -252,6 +282,14 @@ export default function ChatPage() {
                 </div>
               </div>
               <div className="flex items-center space-x-2">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleStartCall}
+                  title="Start video call"
+                >
+                  <Video className="h-4 w-4" />
+                </Button>
                 <Button variant="ghost" size="icon">
                   <Users className="h-4 w-4" />
                 </Button>

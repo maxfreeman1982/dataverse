@@ -14,6 +14,7 @@ import { AIModule } from './modules/ai/ai.module';
 import { BuilderModule } from './modules/builder/builder.module';
 import { ChatModule } from './modules/chat/chat.module';
 import { WorkflowModule } from './modules/workflow/workflow.module';
+import { VideoModule } from './modules/video/video.module';
 
 @Module({
   imports: [
@@ -60,6 +61,7 @@ import { WorkflowModule } from './modules/workflow/workflow.module';
     BuilderModule,
     ChatModule,
     WorkflowModule,
+    VideoModule,
   ],
 })
 export class AppModule {}

@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { io, Socket } from 'socket.io-client'
+import { useAuthStore } from '@/store/auth-store'
 
 const WEBSOCKET_URL = process.env.NEXT_PUBLIC_API_URL?.replace('/api/v1', '') || 'http://localhost:3001'
 
@@ -7,14 +8,18 @@ export function useWebSocket(tableId?: string) {
   const [isConnected, setIsConnected] = useState(false)
   const socketRef = useRef<Socket | null>(null)
   const listenersRef = useRef<Map<string, Set<(data: any) => void>>>(new Map())
+  const { user } = useAuthStore()
 
   useEffect(() => {
-    // Create socket connection
+    // Create socket connection with userId
     const socket = io(`${WEBSOCKET_URL}/ws`, {
       transports: ['websocket'],
       reconnection: true,
       reconnectionDelay: 1000,
       reconnectionAttempts: 5,
+      auth: {
+        userId: user?.id,
+      },
     })
 
     socketRef.current = socket
@@ -41,7 +46,7 @@ export function useWebSocket(tableId?: string) {
     return () => {
       socket.disconnect()
     }
-  }, [tableId])
+  }, [tableId, user?.id])
 
   const on = useCallback((event: string, callback: (data: any) => void) => {
     if (!socketRef.current) return

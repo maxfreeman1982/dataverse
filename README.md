@@ -23,6 +23,7 @@ A modular, intelligent, and secure ecosystem combining no-code tools, databases,
 - ✅ **Chat Module** - Real-time messaging with channels and DMs
 - ✅ **Advanced AI (RAG)** - GPT-4 with semantic search & conversation history
 - ✅ **Workflow Automation** - Automate tasks with visual workflow builder
+- ✅ **Video Calls (WebRTC)** - Real-time video conferencing with screen sharing
 
 ## 🏗️ Architecture
 
@@ -105,6 +106,20 @@ dataverse/
 - **Execution History** - Track all workflow runs with status
 - **Real-time Status** - See workflow execution status live
 - **Enable/Disable** - Control workflow activation
+
+### 8. Video Calls (WebRTC)
+- **Multi-Party Video Calls** - Support for multiple participants
+- **WebRTC Peer-to-Peer** - Direct peer connections for low latency
+- **Audio Controls** - Mute/unmute microphone
+- **Video Controls** - Enable/disable camera
+- **Screen Sharing** - Share your screen with participants
+- **Real-time Signaling** - WebSocket-based WebRTC signaling
+- **Chat Integration** - Start calls directly from chat channels
+- **Call History** - Track past video calls
+- **Participant Status** - See who's in the call and their media status
+- **Automatic Grid Layout** - Responsive video grid that adapts to participant count
+- **STUN Server Support** - NAT traversal with Google STUN servers
+- **Connection State Management** - Automatic reconnection and cleanup
 
 ## 🚀 Quick Start
 
@@ -291,7 +306,9 @@ query {
 - `src/modules/database/` - Database Studio (table schema + dynamic CRUD)
 - `src/modules/builder/` - No-Code Builder (pages & components)
 - `src/modules/chat/` - Communication (channels, messages, real-time chat)
-- `src/modules/ai/` - AI Assistant (OpenAI integration)
+- `src/modules/video/` - Video Calls (WebRTC signaling, call management)
+- `src/modules/ai/` - AI Assistant (OpenAI integration, RAG, embeddings)
+- `src/modules/workflow/` - Workflow Automation (execution engine, triggers)
 - `src/modules/websocket/` - Real-time collaboration
 - `src/modules/health/` - Health checks
 - `src/common/` - Shared utilities (guards, decorators, etc.)
@@ -410,7 +427,7 @@ See [DATAVERSE_OS_ARCHITECTURE.md](./DATAVERSE_OS_ARCHITECTURE.md) for complete 
 - [x] **Workflow automation** (visual builder, 9 action types, conditional logic) ✅
 
 ### Phase 3 (Current) - Advanced Features
-- [ ] Video calls (WebRTC integration)
+- [x] **Video calls** (WebRTC multi-party calls, screen sharing) ✅
 - [ ] Suite bureautique (docs, spreadsheet, presentations)
 - [ ] Mail AI
 - [ ] MCP (Model Context Protocol) integration
