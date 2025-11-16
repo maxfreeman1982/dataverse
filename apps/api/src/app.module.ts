@@ -20,6 +20,7 @@ import { OfficeModule } from './modules/office/office.module';
 import { MCPModule } from './modules/mcp/mcp.module';
 import { MarketplaceModule } from './modules/marketplace/marketplace.module';
 import { MobileAppModule } from './modules/mobile/mobile-app.module';
+import { PerfumeModule } from './modules/perfume/perfume.module';
 
 @Module({
   imports: [
@@ -73,6 +74,7 @@ import { MobileAppModule } from './modules/mobile/mobile-app.module';
     MCPModule,
     MarketplaceModule,
     MobileAppModule,
+    PerfumeModule,
   ],
 })
 export class AppModule {}
