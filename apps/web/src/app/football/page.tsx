@@ -11,7 +11,8 @@ import {
   Target,
   Trophy,
   BarChart3,
-  Box
+  Box,
+  Upload
 } from 'lucide-react';
 
 export default function FootballDashboard() {
@@ -107,6 +108,14 @@ export default function FootballDashboard() {
           />
 
           <FeatureCard
+            href="/football/import-export"
+            icon={<Upload className="w-12 h-12" />}
+            title="Import/Export"
+            description="Import CSV tracking, export JSON/Excel analyses"
+            color="yellow"
+          />
+
+          <FeatureCard
             href="/football/matches"
             icon={<Activity className="w-12 h-12" />}
             title="Tracking Live"
@@ -195,6 +204,8 @@ function FeatureCard({
     orange: 'from-orange-500/10 to-orange-600/10 border-orange-500/30 hover:border-orange-400',
     pink: 'from-pink-500/10 to-pink-600/10 border-pink-500/30 hover:border-pink-400',
     indigo: 'from-indigo-500/10 to-indigo-600/10 border-indigo-500/30 hover:border-indigo-400',
+    cyan: 'from-cyan-500/10 to-cyan-600/10 border-cyan-500/30 hover:border-cyan-400',
+    yellow: 'from-yellow-500/10 to-yellow-600/10 border-yellow-500/30 hover:border-yellow-400',
   };
 
   return (
