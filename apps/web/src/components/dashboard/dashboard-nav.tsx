@@ -14,11 +14,13 @@ import {
   GitBranch,
   Package,
   Smartphone,
+  FlaskConical,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const navigation = [
   { name: 'Home', href: '/dashboard', icon: Home },
+  { name: 'Perfumes', href: '/dashboard/perfumes', icon: FlaskConical },
   { name: 'Database', href: '/database', icon: Database },
   { name: 'Builder', href: '/dashboard/builder', icon: Zap },
   { name: 'Chat', href: '/dashboard/chat', icon: MessageSquare },
