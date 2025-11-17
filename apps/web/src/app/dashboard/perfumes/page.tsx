@@ -14,7 +14,7 @@ import {
 } from '@/graphql/perfume';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Beaker, FlaskConical, Flower2, AlertTriangle, Plus, Shield, ShieldAlert, Download, Sparkles } from 'lucide-react';
+import { Beaker, FlaskConical, Flower2, AlertTriangle, Plus, Shield, ShieldAlert, Download, Sparkles, Package } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { generateComplianceReport, getComplianceStatus, type FormulaIngredientInput } from '@/lib/compliance';
 
@@ -270,8 +270,17 @@ export default function PerfumesPage() {
                           <Button
                             variant="outline"
                             size="sm"
+                            onClick={() => window.location.href = `/dashboard/perfumes/production/${formula.id}`}
+                            title="Production Calculator"
+                          >
+                            <Package className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
                             onClick={() => handleExportPDF(formula.id, formula.name)}
                             disabled={exportingId === formula.id}
+                            title="Export PDF"
                           >
                             <Download className="h-4 w-4" />
                           </Button>
