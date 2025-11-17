@@ -1,0 +1,3 @@
+{
+  "query": "query { getAllFormulas { id name description targetGender difficulty ingredients { ingredient { name } percentage } } }"
+}
