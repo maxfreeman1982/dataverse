@@ -10,7 +10,8 @@ import {
   FileText,
   Target,
   Trophy,
-  BarChart3
+  BarChart3,
+  Box
 } from 'lucide-react';
 
 export default function FootballDashboard() {
@@ -95,6 +96,14 @@ export default function FootballDashboard() {
             title="Analyse Tactique"
             description="Patterns, prédictions, insights spatio-temporels"
             color="orange"
+          />
+
+          <FeatureCard
+            href="/football/visualization3d"
+            icon={<Box className="w-12 h-12" />}
+            title="Visualisation 3D"
+            description="Terrain 3D interactif, heat maps et trajectoires"
+            color="cyan"
           />
 
           <FeatureCard
