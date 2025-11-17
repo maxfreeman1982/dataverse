@@ -14,7 +14,7 @@ import {
 } from '@/graphql/perfume';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Beaker, FlaskConical, Flower2, AlertTriangle, Plus, Shield, ShieldAlert, Download, Sparkles, Package, ArrowLeftRight, BarChart3, Star, CircleDot, Boxes, Search, Users, Settings, Smartphone } from 'lucide-react';
+import { Beaker, FlaskConical, Flower2, AlertTriangle, Plus, Shield, ShieldAlert, Download, Sparkles, Package, ArrowLeftRight, BarChart3, Star, CircleDot, Boxes, Search, Users, Settings, Smartphone, Brain } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { generateComplianceReport, getComplianceStatus, type FormulaIngredientInput } from '@/lib/compliance';
 
@@ -132,6 +132,14 @@ export default function PerfumesPage() {
           >
             <Sparkles className="mr-2 h-4 w-4" />
             Notes
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => window.location.href = '/dashboard/perfumes/ai-suggestions'}
+          >
+            <Brain className="mr-2 h-4 w-4" />
+            AI
           </Button>
           <Button
             variant="outline"
