@@ -1,0 +1,11 @@
+export { Team } from './team.entity';
+export { Player } from './player.entity';
+export { Match } from './match.entity';
+export { TrackingData } from './tracking-data.entity';
+export { MatchEvent } from './match-event.entity';
+export { TacticalAnalysis } from './tactical-analysis.entity';
+export { Pattern } from './pattern.entity';
+export { Prediction } from './prediction.entity';
+export { TrainingPlan } from './training-plan.entity';
+export { SetPiece } from './set-piece.entity';
+export { MatchReport } from './match-report.entity';
