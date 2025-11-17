@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useQuery } from '@apollo/client';
 import {
   GET_ALL_OLFACTIVE_FAMILIES,
@@ -13,11 +14,13 @@ import {
 } from '@/graphql/perfume';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Beaker, FlaskConical, Flower2, AlertTriangle, Plus, Shield, ShieldAlert } from 'lucide-react';
+import { Beaker, FlaskConical, Flower2, AlertTriangle, Plus, Shield, ShieldAlert, Download } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { generateComplianceReport, getComplianceStatus, type FormulaIngredientInput } from '@/lib/compliance';
 
 export default function PerfumesPage() {
+  const [exportingId, setExportingId] = useState<string | null>(null);
+
   const { data: familiesData, loading: familiesLoading } = useQuery<{ getAllOlfactiveFamilies: OlfactiveFamily[] }>(GET_ALL_OLFACTIVE_FAMILIES);
   const { data: ingredientsData, loading: ingredientsLoading } = useQuery<{ getAllIngredients: Ingredient[] }>(GET_ALL_INGREDIENTS);
   const { data: formulasData, loading: formulasLoading } = useQuery<{ getAllFormulas: Formula[] }>(GET_ALL_FORMULAS);
@@ -27,6 +30,31 @@ export default function PerfumesPage() {
   const ingredients = ingredientsData?.getAllIngredients || [];
   const formulas = formulasData?.getAllFormulas || [];
   const allergens = allergensData?.getAllAllergens || [];
+
+  const handleExportPDF = async (formulaId: string, formulaName: string) => {
+    setExportingId(formulaId);
+    try {
+      const response = await fetch(`/api/formulas/${formulaId}/pdf`);
+      if (!response.ok) {
+        throw new Error('Failed to generate PDF');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `formula-${formulaName.replace(/[^a-zA-Z0-9]/g, '-')}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('PDF export error:', error);
+      alert('Failed to export PDF. Please try again.');
+    } finally {
+      setExportingId(null);
+    }
+  };
 
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">
@@ -232,6 +260,14 @@ export default function PerfumesPage() {
                           </div>
                         </div>
                         <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleExportPDF(formula.id, formula.name)}
+                            disabled={exportingId === formula.id}
+                          >
+                            <Download className="h-4 w-4" />
+                          </Button>
                           <Button
                             variant="outline"
                             size="sm"

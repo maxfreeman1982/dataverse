@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useQuery } from '@apollo/client';
 import { useParams, useRouter } from 'next/navigation';
 import { GET_FORMULA_BY_ID, type Formula } from '@/graphql/perfume';
@@ -14,12 +15,38 @@ export default function ComplianceReportPage() {
   const params = useParams();
   const router = useRouter();
   const formulaId = params.id as string;
+  const [isExporting, setIsExporting] = useState(false);
 
   const { data, loading } = useQuery<{ getFormulaById: Formula }>(GET_FORMULA_BY_ID, {
     variables: { id: formulaId },
   });
 
   const formula = data?.getFormulaById;
+
+  const handleExportPDF = async () => {
+    setIsExporting(true);
+    try {
+      const response = await fetch(`/api/formulas/${formulaId}/pdf`);
+      if (!response.ok) {
+        throw new Error('Failed to generate PDF');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `formula-${formula?.name.replace(/[^a-zA-Z0-9]/g, '-')}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('PDF export error:', error);
+      alert('Failed to export PDF. Please try again.');
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -70,9 +97,9 @@ export default function ComplianceReportPage() {
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline">
+          <Button variant="outline" onClick={handleExportPDF} disabled={isExporting}>
             <Download className="mr-2 h-4 w-4" />
-            Export PDF
+            {isExporting ? 'Generating...' : 'Export PDF'}
           </Button>
         </div>
       </div>
