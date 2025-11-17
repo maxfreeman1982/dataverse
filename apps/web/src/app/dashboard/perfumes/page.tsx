@@ -72,6 +72,14 @@ export default function PerfumesPage() {
           <Button
             variant="outline"
             size="sm"
+            onClick={() => window.location.href = '/dashboard/perfumes/lab-notes'}
+          >
+            <FlaskConical className="mr-2 h-4 w-4" />
+            Lab Notes
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
             onClick={() => window.location.href = '/dashboard/perfumes/inventory'}
           >
             <Boxes className="mr-2 h-4 w-4" />
