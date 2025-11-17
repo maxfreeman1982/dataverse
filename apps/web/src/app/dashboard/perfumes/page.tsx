@@ -14,7 +14,7 @@ import {
 } from '@/graphql/perfume';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Beaker, FlaskConical, Flower2, AlertTriangle, Plus, Shield, ShieldAlert, Download, Sparkles, Package } from 'lucide-react';
+import { Beaker, FlaskConical, Flower2, AlertTriangle, Plus, Shield, ShieldAlert, Download, Sparkles, Package, ArrowLeftRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { generateComplianceReport, getComplianceStatus, type FormulaIngredientInput } from '@/lib/compliance';
 
@@ -61,6 +61,13 @@ export default function PerfumesPage() {
       <div className="flex items-center justify-between space-y-2">
         <h2 className="text-3xl font-bold tracking-tight">Perfume Architect Pro</h2>
         <div className="flex items-center space-x-2">
+          <Button
+            variant="outline"
+            onClick={() => window.location.href = '/dashboard/perfumes/compare'}
+          >
+            <ArrowLeftRight className="mr-2 h-4 w-4" />
+            Compare
+          </Button>
           <Button
             variant="outline"
             onClick={() => window.location.href = '/dashboard/perfumes/notes'}
