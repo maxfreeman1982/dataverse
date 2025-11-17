@@ -14,7 +14,7 @@ import {
 } from '@/graphql/perfume';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Beaker, FlaskConical, Flower2, AlertTriangle, Plus, Shield, ShieldAlert, Download, Sparkles, Package, ArrowLeftRight, BarChart3, Star } from 'lucide-react';
+import { Beaker, FlaskConical, Flower2, AlertTriangle, Plus, Shield, ShieldAlert, Download, Sparkles, Package, ArrowLeftRight, BarChart3, Star, CircleDot } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { generateComplianceReport, getComplianceStatus, type FormulaIngredientInput } from '@/lib/compliance';
 
@@ -74,6 +74,13 @@ export default function PerfumesPage() {
           >
             <BarChart3 className="mr-2 h-4 w-4" />
             Analytics
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => window.location.href = '/dashboard/perfumes/wheel'}
+          >
+            <CircleDot className="mr-2 h-4 w-4" />
+            Wheel
           </Button>
           <Button
             variant="outline"
