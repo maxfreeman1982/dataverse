@@ -13,8 +13,9 @@ import {
 } from '@/graphql/perfume';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Beaker, FlaskConical, Flower2, AlertTriangle, Plus } from 'lucide-react';
+import { Beaker, FlaskConical, Flower2, AlertTriangle, Plus, Shield, ShieldAlert } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { generateComplianceReport, getComplianceStatus, type FormulaIngredientInput } from '@/lib/compliance';
 
 export default function PerfumesPage() {
   const { data: familiesData, loading: familiesLoading } = useQuery<{ getAllOlfactiveFamilies: OlfactiveFamily[] }>(GET_ALL_OLFACTIVE_FAMILIES);
@@ -187,29 +188,62 @@ export default function PerfumesPage() {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {formulas.map((formula) => (
-                    <div
-                      key={formula.id}
-                      className="flex items-center justify-between border-b pb-4 last:border-0"
-                    >
-                      <div className="space-y-1">
-                        <h4 className="font-semibold">{formula.name}</h4>
-                        <p className="text-sm text-muted-foreground">{formula.description}</p>
-                        <div className="flex gap-2 text-xs">
-                          <span className="rounded-full bg-primary/10 px-2 py-1 text-primary">
-                            {formula.targetGender}
-                          </span>
-                          <span className="rounded-full bg-secondary px-2 py-1">
-                            {formula.difficulty}
-                          </span>
-                          <span className="rounded-full bg-secondary px-2 py-1">
-                            {formula.ingredients.length} ingredients
-                          </span>
+                  {formulas.map((formula) => {
+                    // Calculate compliance for each formula
+                    const formulaIngredients: FormulaIngredientInput[] = formula.ingredients.map((fi) => ({
+                      ingredient: fi.ingredient,
+                      percentage: fi.percentage,
+                    }));
+                    const complianceReport = generateComplianceReport(formulaIngredients);
+                    const complianceStatus = getComplianceStatus(complianceReport);
+
+                    return (
+                      <div
+                        key={formula.id}
+                        className="flex items-center justify-between border-b pb-4 last:border-0"
+                      >
+                        <div className="space-y-2 flex-1">
+                          <div className="flex items-center gap-2">
+                            <h4 className="font-semibold">{formula.name}</h4>
+                            {complianceReport.isFullyCompliant ? (
+                              <Shield className="h-4 w-4 text-green-600" />
+                            ) : (
+                              <ShieldAlert className="h-4 w-4 text-orange-600" />
+                            )}
+                          </div>
+                          <p className="text-sm text-muted-foreground">{formula.description}</p>
+                          <div className="flex gap-2 text-xs flex-wrap">
+                            <span className="rounded-full bg-primary/10 px-2 py-1 text-primary">
+                              {formula.targetGender}
+                            </span>
+                            <span className="rounded-full bg-secondary px-2 py-1">
+                              {formula.difficulty}
+                            </span>
+                            <span className="rounded-full bg-secondary px-2 py-1">
+                              {formula.ingredients.length} ingredients
+                            </span>
+                            <span className={`rounded-full px-2 py-1 ${
+                              complianceReport.isFullyCompliant
+                                ? 'bg-green-100 text-green-700'
+                                : 'bg-orange-100 text-orange-700'
+                            }`}>
+                              {complianceStatus.label}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => window.location.href = `/dashboard/perfumes/formulas/${formula.id}/compliance`}
+                          >
+                            Compliance
+                          </Button>
+                          <Button variant="outline" size="sm">Edit</Button>
                         </div>
                       </div>
-                      <Button variant="outline" size="sm">Edit</Button>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </CardContent>

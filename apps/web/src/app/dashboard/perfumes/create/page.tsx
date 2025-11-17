@@ -16,8 +16,9 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { FlaskConical, Plus, X, AlertTriangle, CheckCircle, ChevronLeft } from 'lucide-react';
+import { FlaskConical, Plus, X, AlertTriangle, CheckCircle, ChevronLeft, Shield, ShieldAlert } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { generateComplianceReport, getComplianceStatus, getComplianceColor, type FormulaIngredientInput } from '@/lib/compliance';
 
 interface FormulaIngredient {
   ingredient: Ingredient;
@@ -42,7 +43,12 @@ export default function CreateFormulaPage() {
 
   const ingredients = ingredientsData?.getAllIngredients || [];
   const totalPercentage = selectedIngredients.reduce((sum, item) => sum + item.percentage, 0);
-  const isValid = totalPercentage === 100 && name.trim() !== '' && selectedIngredients.length > 0;
+
+  // Generate compliance report
+  const complianceReport = generateComplianceReport(selectedIngredients as FormulaIngredientInput[]);
+  const complianceStatus = getComplianceStatus(complianceReport);
+
+  const isValid = totalPercentage === 100 && name.trim() !== '' && selectedIngredients.length > 0 && complianceReport.isFullyCompliant;
 
   // Filter ingredients by search term and exclude already selected
   const availableIngredients = ingredients.filter(
@@ -213,7 +219,9 @@ export default function CreateFormulaPage() {
                   </div>
                   <p className="text-xs text-muted-foreground">
                     {totalPercentage === 100
-                      ? 'Perfect! Formula is balanced.'
+                      ? complianceReport.isFullyCompliant
+                        ? 'Perfect! Formula is balanced and compliant.'
+                        : 'Balanced, but has compliance violations.'
                       : totalPercentage > 100
                       ? `Over by ${(totalPercentage - 100).toFixed(1)}%`
                       : `${(100 - totalPercentage).toFixed(1)}% remaining`}
@@ -239,6 +247,95 @@ export default function CreateFormulaPage() {
                   </div>
                 </div>
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Compliance Status */}
+          <Card className={cn(
+            "border-2",
+            complianceReport.isFullyCompliant ? "border-green-500/50" : "border-orange-500/50"
+          )}>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  {complianceReport.isFullyCompliant ? (
+                    <Shield className="h-5 w-5 text-green-600" />
+                  ) : (
+                    <ShieldAlert className="h-5 w-5 text-orange-600" />
+                  )}
+                  <CardTitle>Compliance Status</CardTitle>
+                </div>
+                <Badge variant={complianceStatus.variant}>
+                  {complianceStatus.label}
+                </Badge>
+              </div>
+              <CardDescription>
+                {complianceReport.totalAllergenCount === 0
+                  ? 'No allergens detected'
+                  : `${complianceReport.totalAllergenCount} allergen${complianceReport.totalAllergenCount > 1 ? 's' : ''} detected`}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {complianceReport.warnings.length > 0 && (
+                <div className="space-y-2">
+                  {complianceReport.warnings.map((warning, index) => (
+                    <div key={index} className="flex items-start gap-2 p-3 bg-orange-50 border border-orange-200 rounded-lg">
+                      <AlertTriangle className="h-4 w-4 text-orange-600 mt-0.5 flex-shrink-0" />
+                      <p className="text-sm text-orange-900">{warning}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {complianceReport.allergenReports.length > 0 && (
+                <div className="space-y-2 pt-2 border-t">
+                  <Label className="text-xs font-semibold uppercase text-muted-foreground">
+                    Allergen Breakdown
+                  </Label>
+                  {complianceReport.allergenReports.map((report) => {
+                    const color = getComplianceColor(report.totalPercentage, report.regulatoryLimit);
+                    return (
+                      <div key={report.allergen.id} className="space-y-1">
+                        <div className="flex items-center justify-between text-sm">
+                          <span className="font-medium">{report.allergen.name}</span>
+                          <span className={cn(
+                            "font-semibold",
+                            color === 'green' ? 'text-green-600' :
+                            color === 'orange' ? 'text-orange-600' :
+                            'text-red-600'
+                          )}>
+                            {report.totalPercentage.toFixed(2)}% / {report.regulatoryLimit}%
+                          </span>
+                        </div>
+                        <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+                          <div
+                            className={cn(
+                              "h-full transition-all",
+                              color === 'green' ? 'bg-green-600' :
+                              color === 'orange' ? 'bg-orange-600' :
+                              'bg-red-600'
+                            )}
+                            style={{ width: `${Math.min((report.totalPercentage / report.regulatoryLimit) * 100, 100)}%` }}
+                          />
+                        </div>
+                        {report.affectedIngredients.length > 0 && (
+                          <p className="text-xs text-muted-foreground">
+                            From: {report.affectedIngredients.map(ai => ai.ingredient.name).join(', ')}
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {complianceReport.allergenReports.length === 0 && (
+                <div className="text-center py-6">
+                  <Shield className="h-12 w-12 text-green-600 mx-auto mb-2" />
+                  <p className="text-sm font-medium text-green-600">No allergens detected</p>
+                  <p className="text-xs text-muted-foreground">This formula is allergen-free</p>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>

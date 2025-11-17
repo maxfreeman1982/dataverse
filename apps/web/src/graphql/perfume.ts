@@ -76,7 +76,17 @@ export const GET_ALL_FORMULAS = gql`
         ingredient {
           id
           name
+          description
+          tenacity
+          diffusion
+          allergens {
+            id
+            name
+            casNumber
+            regulatoryLimit
+          }
           olfactiveFamily {
+            id
             name
           }
         }
@@ -103,6 +113,12 @@ export const GET_FORMULA_BY_ID = gql`
           description
           tenacity
           diffusion
+          allergens {
+            id
+            name
+            casNumber
+            regulatoryLimit
+          }
           olfactiveFamily {
             id
             name
