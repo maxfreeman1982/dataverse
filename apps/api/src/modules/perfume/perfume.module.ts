@@ -7,6 +7,7 @@ import { Formula } from './entities/formula.entity';
 import { FormulaIngredient } from './entities/formula-ingredient.entity';
 import { PerfumeService } from './services/perfume.service';
 import { AIRecommendationService } from './services/ai-recommendation.service';
+import { MoodComposerService } from './services/mood-composer.service';
 import { PerfumeResolver } from './perfume.resolver';
 
 @Module({
@@ -22,8 +23,9 @@ import { PerfumeResolver } from './perfume.resolver';
   providers: [
     PerfumeService,
     AIRecommendationService,
+    MoodComposerService,
     PerfumeResolver,
   ],
-  exports: [PerfumeService, AIRecommendationService],
+  exports: [PerfumeService, AIRecommendationService, MoodComposerService],
 })
 export class PerfumeModule {}
