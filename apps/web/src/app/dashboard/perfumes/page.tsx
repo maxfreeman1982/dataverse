@@ -32,7 +32,7 @@ export default function PerfumesPage() {
       <div className="flex items-center justify-between space-y-2">
         <h2 className="text-3xl font-bold tracking-tight">Perfume Architect Pro</h2>
         <div className="flex items-center space-x-2">
-          <Button>
+          <Button onClick={() => window.location.href = '/dashboard/perfumes/create'}>
             <Plus className="mr-2 h-4 w-4" />
             New Formula
           </Button>
@@ -140,7 +140,13 @@ export default function PerfumesPage() {
                           </span>
                         </div>
                       </div>
-                      <Button variant="outline" size="sm">View</Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => window.location.href = `/dashboard/perfumes/ingredients/${ingredient.id}`}
+                      >
+                        View
+                      </Button>
                     </div>
                   ))}
                   {ingredients.length > 10 && (
@@ -174,7 +180,7 @@ export default function PerfumesPage() {
                   <p className="text-sm text-muted-foreground mb-4">
                     Create your first perfume formula to get started
                   </p>
-                  <Button>
+                  <Button onClick={() => window.location.href = '/dashboard/perfumes/create'}>
                     <Plus className="mr-2 h-4 w-4" />
                     Create Formula
                   </Button>
