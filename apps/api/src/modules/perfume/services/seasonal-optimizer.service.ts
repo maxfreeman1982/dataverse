@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/core';
+import { Injectable } from '@nestjs/common';
 import { Ingredient } from '../entities/ingredient.entity';
 import { Formula } from '../entities/formula.entity';
 

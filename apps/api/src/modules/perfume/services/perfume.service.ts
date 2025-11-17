@@ -75,15 +75,18 @@ export class PerfumeService implements OnModuleInit {
           continue;
         }
 
+        // Extract allergens from ingredientData and exclude from spread
+        const { allergens: allergenNames, olfactiveFamily: familyName, ...ingredientProps } = ingredientData;
+
         const ingredient = this.ingredientRepository.create({
-          ...ingredientData,
+          ...ingredientProps,
           olfactiveFamily: family,
         });
 
         // Add allergens if specified
-        if (ingredientData.allergens) {
+        if (allergenNames) {
           ingredient.allergens = allergens.filter(a =>
-            ingredientData.allergens!.includes(a.name)
+            allergenNames.includes(a.name)
           );
         }
 
