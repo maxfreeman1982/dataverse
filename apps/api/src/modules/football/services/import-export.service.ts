@@ -1,10 +1,10 @@
 import { Injectable, Logger, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import * as csvParser from 'csv-parser';
+import csvParser from 'csv-parser';
 import { stringify } from 'csv-stringify';
 import { Readable } from 'stream';
-import ExcelJS from 'exceljs';
+import * as ExcelJS from 'exceljs';
 import {
   TrackingData,
   MatchEvent,
@@ -82,7 +82,7 @@ export class ImportExportService {
 
             results.push(tracking);
           } catch (error) {
-            errors.push(`Row ${row.frame}: ${error.message}`);
+            errors.push(`Row ${row.frame}: ${(error as Error).message}`);
           }
         })
         .on('end', async () => {
@@ -92,7 +92,7 @@ export class ImportExportService {
             resolve({ imported: results.length, errors });
           } catch (error) {
             this.logger.error('Error saving tracking data', error);
-            resolve({ imported: 0, errors: [...errors, error.message] });
+            resolve({ imported: 0, errors: [...errors, (error as Error).message] });
           }
         })
         .on('error', (error) => {
@@ -147,7 +147,7 @@ export class ImportExportService {
 
             results.push(event);
           } catch (error) {
-            errors.push(`Row ${row.minute}: ${error.message}`);
+            errors.push(`Row ${row.minute}: ${(error as Error).message}`);
           }
         })
         .on('end', async () => {
@@ -157,7 +157,7 @@ export class ImportExportService {
             resolve({ imported: results.length, errors });
           } catch (error) {
             this.logger.error('Error saving match events', error);
-            resolve({ imported: 0, errors: [...errors, error.message] });
+            resolve({ imported: 0, errors: [...errors, (error as Error).message] });
           }
         })
         .on('error', (error) => {
@@ -398,7 +398,7 @@ export class ImportExportService {
       sheet.getRow(1).font = { color: { argb: 'FFFFFFFF' }, bold: true };
     });
 
-    return await workbook.xlsx.writeBuffer() as Buffer;
+    return (await workbook.xlsx.writeBuffer()) as unknown as Buffer;
   }
 
   /**
@@ -480,6 +480,6 @@ export class ImportExportService {
       sheet.getRow(1).font = { color: { argb: 'FFFFFFFF' }, bold: true };
     });
 
-    return await workbook.xlsx.writeBuffer() as Buffer;
+    return (await workbook.xlsx.writeBuffer()) as unknown as Buffer;
   }
 }
