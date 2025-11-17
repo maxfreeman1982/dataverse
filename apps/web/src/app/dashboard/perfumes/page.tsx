@@ -14,7 +14,7 @@ import {
 } from '@/graphql/perfume';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Beaker, FlaskConical, Flower2, AlertTriangle, Plus, Shield, ShieldAlert, Download, Sparkles, Package, ArrowLeftRight, BarChart3, Star, CircleDot, Boxes, Search } from 'lucide-react';
+import { Beaker, FlaskConical, Flower2, AlertTriangle, Plus, Shield, ShieldAlert, Download, Sparkles, Package, ArrowLeftRight, BarChart3, Star, CircleDot, Boxes, Search, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { generateComplianceReport, getComplianceStatus, type FormulaIngredientInput } from '@/lib/compliance';
 
@@ -68,6 +68,14 @@ export default function PerfumesPage() {
           >
             <Search className="mr-2 h-4 w-4" />
             Search
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => window.location.href = '/dashboard/perfumes/clients'}
+          >
+            <Users className="mr-2 h-4 w-4" />
+            Clients
           </Button>
           <Button
             variant="outline"
