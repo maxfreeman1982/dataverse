@@ -1,0 +1,287 @@
+name: FlowNav Mobile CI
+
+on:
+  push:
+    branches: [main, develop, 'claude/**']
+    paths:
+      - 'flownav-mobile/**'
+      - '.github/workflows/flownav-mobile-ci.yml'
+  pull_request:
+    branches: [main, develop]
+    paths:
+      - 'flownav-mobile/**'
+
+jobs:
+  lint-and-typecheck:
+    name: Lint & Type Check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: flownav-mobile
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: flownav-mobile/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
+
+      - name: Run TypeScript type check
+        run: npm run type-check
+
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: flownav-mobile
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: flownav-mobile/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run tests with coverage
+        run: npm run test:ci
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          files: ./flownav-mobile/coverage/coverage-final.json
+          flags: mobile
+          name: flownav-mobile
+          fail_ci_if_error: false
+
+      - name: Generate coverage summary
+        if: always()
+        run: |
+          echo "## Test Coverage Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          cat coverage/coverage-summary.txt 2>/dev/null || echo "Coverage report not found" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+
+  build-android:
+    name: Build Android
+    runs-on: ubuntu-latest
+    needs: [lint-and-typecheck, test]
+    defaults:
+      run:
+        working-directory: flownav-mobile
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: flownav-mobile/package-lock.json
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Cache Gradle
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Build Android Debug APK
+        run: |
+          cd android
+          ./gradlew assembleDebug --no-daemon
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-debug
+          path: flownav-mobile/android/app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 7
+
+  build-ios:
+    name: Build iOS
+    runs-on: macos-latest
+    needs: [lint-and-typecheck, test]
+    defaults:
+      run:
+        working-directory: flownav-mobile
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: flownav-mobile/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install CocoaPods
+        run: |
+          cd ios
+          pod install
+
+      - name: Build iOS
+        run: |
+          cd ios
+          xcodebuild -workspace FlowNav.xcworkspace \
+            -scheme FlowNav \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO
+
+  security-audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: flownav-mobile
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Run npm audit
+        run: npm audit --audit-level=moderate
+        continue-on-error: true
+
+      - name: Check for sensitive files
+        run: |
+          if find . -name "*.key" -o -name "*.pem" -o -name ".env" | grep -q .; then
+            echo "Warning: Sensitive files found"
+            exit 1
+          fi
+
+  privacy-validation:
+    name: Privacy Validation
+    runs-on: ubuntu-latest
+    needs: test
+    defaults:
+      run:
+        working-directory: flownav-mobile
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: flownav-mobile/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Validate k-anonymity implementation
+        run: |
+          echo "## Privacy Validation Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Checking k-anonymity enforcement in codebase..." >> $GITHUB_STEP_SUMMARY
+
+          # Search for k-anonymity validation
+          if grep -r "meetsKAnonymity" src/ --include="*.ts" --include="*.tsx"; then
+            echo "✅ K-anonymity validation found" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ K-anonymity validation NOT found" >> $GITHUB_STEP_SUMMARY
+            exit 1
+          fi
+
+          # Check for raw GPS storage (should NOT exist)
+          if grep -r "latitude.*longitude" src/ --include="*.ts" --include="*.tsx" | grep -v "types" | grep -v "test" | grep -v "comment"; then
+            echo "⚠️ Warning: Raw GPS coordinates found in source" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ No raw GPS storage detected" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Privacy checks completed" >> $GITHUB_STEP_SUMMARY
+
+  accessibility-check:
+    name: Accessibility Check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: flownav-mobile
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check accessibility implementation
+        run: |
+          echo "## Accessibility Check Report" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          # Check for accessibility labels
+          label_count=$(grep -r "accessibilityLabel" src/ --include="*.tsx" | wc -l)
+          echo "- Found $label_count accessibility labels" >> $GITHUB_STEP_SUMMARY
+
+          # Check for accessibility roles
+          role_count=$(grep -r "accessibilityRole" src/ --include="*.tsx" | wc -l)
+          echo "- Found $role_count accessibility roles" >> $GITHUB_STEP_SUMMARY
+
+          # Check for WCAG utilities
+          if grep -r "meetsContrastRatio" src/utils/ --include="*.ts"; then
+            echo "- ✅ WCAG contrast validation implemented" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if grep -r "ensureTouchTargetSize" src/utils/ --include="*.ts"; then
+            echo "- ✅ Touch target sizing implemented" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  summary:
+    name: CI Summary
+    runs-on: ubuntu-latest
+    needs: [lint-and-typecheck, test, security-audit, privacy-validation, accessibility-check]
+    if: always()
+
+    steps:
+      - name: Generate summary
+        run: |
+          echo "# FlowNav Mobile CI Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "All checks completed. See individual job results above." >> $GITHUB_STEP_SUMMARY
