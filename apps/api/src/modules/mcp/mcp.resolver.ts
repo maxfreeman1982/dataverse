@@ -2,7 +2,7 @@ import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import { User } from '../auth/entities/user.entity';
+import { User } from '../users/user.entity';
 import { MCPService } from './mcp.service';
 import { MCPServer } from './entities/mcp-server.entity';
 import { MCPTool } from './entities/mcp-tool.entity';

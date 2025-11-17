@@ -48,6 +48,10 @@ export class User {
   @Column({ default: false })
   isEmailVerified: boolean;
 
+  @Field()
+  @Column({ default: false })
+  isVerified: boolean;
+
   @Field(() => [String])
   @Column('simple-array', { default: '' })
   roles: string[];

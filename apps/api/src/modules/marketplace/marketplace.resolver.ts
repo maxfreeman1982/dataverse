@@ -2,7 +2,7 @@ import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import { User } from '../auth/entities/user.entity';
+import { User } from '../users/user.entity';
 import { MarketplaceService } from './marketplace.service';
 import { Plugin } from './entities/plugin.entity';
 import { PluginInstallation } from './entities/plugin-installation.entity';

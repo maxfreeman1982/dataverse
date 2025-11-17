@@ -1,0 +1,1472 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type AIAnalytics {
+  averageTokensPerMessage: Int!
+  documentsIndexed: Int!
+  totalConversations: Int!
+  totalMessages: Int!
+  totalTokens: Int!
+}
+
+type AIConversation {
+  createdAt: DateTime!
+  id: ID!
+  isPinned: Boolean!
+  title: String!
+  updatedAt: DateTime!
+  user: User!
+}
+
+type AIMessage {
+  content: String!
+  conversation: AIConversation!
+  createdAt: DateTime!
+  id: ID!
+  metadata: JSONObject
+  retrievedDocs: [String!]
+  role: String!
+  tokenCount: Int
+  user: User!
+}
+
+type AIResponseType {
+  answer: String!
+  context: String
+  suggestedActions: [String!]
+}
+
+input AddReactionInput {
+  emoji: String!
+  messageId: String!
+}
+
+type Allergen {
+  casNumber: String!
+  createdAt: DateTime!
+  description: String
+  id: ID!
+  labelingThreshold: Float!
+  maxConcentrationLeaveOn: Float!
+  maxConcentrationRinseOff: Float!
+  name: String!
+  regulatoryNotes: String
+  requiresLabeling: Boolean!
+  updatedAt: DateTime!
+}
+
+enum AppCategory {
+  BUSINESS
+  EDUCATION
+  ENTERTAINMENT
+  FINANCE
+  HEALTH
+  OTHER
+  PRODUCTIVITY
+  SOCIAL
+  UTILITIES
+}
+
+enum AppStatus {
+  ARCHIVED
+  DEVELOPMENT
+  PRODUCTION
+  TESTING
+}
+
+type AuthPayload {
+  accessToken: String!
+  user: User!
+}
+
+enum BuildStatus {
+  BUILDING
+  FAILED
+  PENDING
+  PUBLISHED
+  SUCCESS
+  UPLOADED
+}
+
+enum BuildType {
+  DEVELOPMENT
+  PRODUCTION
+  STAGING
+}
+
+enum CallStatus {
+  ACTIVE
+  ENDED
+  WAITING
+}
+
+type Channel {
+  coverImage: String
+  createdAt: DateTime!
+  createdBy: User!
+  description: String
+  icon: String
+  id: ID!
+  isArchived: Boolean!
+  lastMessageAt: DateTime
+  members: [User!]
+  messages: [Message!]
+  name: String!
+  type: ChannelType!
+  updatedAt: DateTime!
+}
+
+enum ChannelType {
+  DIRECT
+  PRIVATE
+  PUBLIC
+}
+
+enum ColumnType {
+  BOOLEAN
+  DATE
+  DATETIME
+  EMAIL
+  FILE
+  JSON
+  MULTI_SELECT
+  NUMBER
+  PHONE
+  RELATION
+  RICH_TEXT
+  SELECT
+  TEXT
+  URL
+}
+
+input CreateBuildInput {
+  appId: ID!
+  branchName: String
+  buildNumber: Int!
+  changelog: String
+  commitHash: String
+  isBeta: Boolean
+  isMandatoryUpdate: Boolean
+  releaseNotes: String
+  type: BuildType!
+  version: String!
+}
+
+input CreateChannelInput {
+  description: String
+  icon: String
+  memberIds: [String!]
+  name: String!
+  type: ChannelType
+}
+
+input CreateColumnInput {
+  defaultValue: String
+  description: String
+  isRequired: Boolean
+  isUnique: Boolean
+  name: String!
+  order: Float
+  slug: String!
+  type: ColumnType!
+}
+
+input CreateComponentInput {
+  order: Int
+  pageId: String!
+  parentId: String
+  properties: JSONObject!
+  style: JSONObject
+  type: String!
+}
+
+input CreateConversationInput {
+  title: String!
+}
+
+input CreateDocumentInput {
+  content: JSONObject
+  description: String
+  icon: String
+  tags: [String!]
+  title: String!
+}
+
+input CreateEmailInput {
+  bccAddresses: [String!]
+  body: String!
+  ccAddresses: [String!]
+  htmlBody: String
+  isDraft: Boolean
+  priority: EmailPriority
+  subject: String!
+  threadId: ID
+  toAddresses: [String!]!
+}
+
+input CreateMCPServerInput {
+  config: JSONObject
+  description: String
+  headers: JSONObject
+  isPublic: Boolean
+  name: String!
+  type: MCPServerType!
+  url: String!
+}
+
+input CreateMessageInput {
+  attachments: JSONObject
+  channelId: String!
+  content: String!
+  mentions: JSONObject
+  replyToId: String
+}
+
+input CreateMobileAppInput {
+  bundleId: String
+  category: AppCategory!
+  description: String
+  iconUrl: String
+  name: String!
+  packageName: String
+  platform: MobilePlatform!
+  slug: String!
+}
+
+input CreatePageInput {
+  coverImage: String
+  description: String
+  icon: String
+  name: String!
+  slug: String!
+}
+
+input CreatePluginInput {
+  author: String!
+  category: PluginCategory!
+  config: JSONObject
+  description: String!
+  documentationUrl: String
+  downloadUrl: String!
+  homepageUrl: String
+  iconUrl: String
+  longDescription: String
+  name: String!
+  permissions: JSONObject
+  repositoryUrl: String
+  screenshots: [String!]
+  slug: String!
+  tags: [String!]
+  version: String!
+}
+
+input CreatePresentationInput {
+  description: String
+  icon: String
+  theme: String
+  title: String!
+}
+
+input CreatePushNotificationInput {
+  appId: ID!
+  deepLink: String
+  imageUrl: String
+  isSilent: Boolean
+  message: String!
+  priority: NotificationPriority
+  scheduledAt: DateTime
+  sendToAndroid: Boolean
+  sendToIos: Boolean
+  sound: String
+  target: NotificationTarget
+  targetSegments: [String!]
+  targetUserIds: [String!]
+  title: String!
+}
+
+input CreateReviewInput {
+  comment: String
+  pluginId: ID!
+  rating: Int!
+}
+
+input CreateSpreadsheetInput {
+  description: String
+  icon: String
+  title: String!
+}
+
+input CreateTableInput {
+  columns: [CreateColumnInput!]!
+  description: String
+  icon: String
+  name: String!
+  slug: String!
+}
+
+input CreateVideoCallInput {
+  channelId: ID
+  name: String!
+}
+
+input CreateWorkflowInput {
+  description: String
+  name: String!
+  triggerConfig: JSONObject!
+  triggerType: String!
+}
+
+type DatabaseColumn {
+  createdAt: DateTime!
+  defaultValue: String
+  description: String
+  id: ID!
+  isRequired: Boolean!
+  isUnique: Boolean!
+  isVisible: Boolean!
+  name: String!
+  options: JSON!
+  order: Float!
+  slug: String!
+  type: ColumnType!
+  updatedAt: DateTime!
+}
+
+type DatabaseRecord {
+  createdAt: DateTime!
+  createdBy: User
+  data: JSONObject!
+  id: ID!
+  updatedAt: DateTime!
+  updatedBy: User
+}
+
+type DatabaseTable {
+  columns: [DatabaseColumn!]!
+  createdAt: DateTime!
+  createdBy: User!
+  description: String
+  icon: String
+  id: ID!
+  isActive: Boolean!
+  metadata: JSON!
+  name: String!
+  slug: String!
+  updatedAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Document {
+  characterCount: Float!
+  collaborators: [User!]
+  content: JSONObject!
+  createdAt: DateTime!
+  createdBy: User!
+  createdById: String!
+  description: String
+  icon: String
+  id: ID!
+  lastEditedBy: User
+  lastEditedById: String
+  metadata: JSONObject
+  status: DocumentStatus!
+  tags: [String!]
+  title: String!
+  updatedAt: DateTime!
+  visibility: DocumentVisibility!
+  wordCount: Float!
+}
+
+enum DocumentStatus {
+  ARCHIVED
+  DRAFT
+  PUBLISHED
+}
+
+enum DocumentVisibility {
+  PRIVATE
+  PUBLIC
+  SHARED
+}
+
+type Email {
+  aiCategory: String
+  aiSentimentScore: Float
+  aiSuggestedReplies: [String!]
+  aiSummary: String
+  attachments: JSONObject
+  bccAddresses: [String!]
+  body: String!
+  ccAddresses: [String!]
+  createdAt: DateTime!
+  folder: EmailFolder!
+  fromAddress: String!
+  fromName: String!
+  htmlBody: String
+  id: ID!
+  isImportant: Boolean!
+  isRead: Boolean!
+  isStarred: Boolean!
+  labels: [String!]
+  priority: EmailPriority!
+  receivedAt: DateTime
+  sentAt: DateTime
+  status: EmailStatus!
+  subject: String!
+  thread: EmailThread
+  threadId: String
+  toAddresses: [String!]!
+  updatedAt: DateTime!
+  user: User!
+  userId: String!
+}
+
+enum EmailFolder {
+  ARCHIVE
+  DRAFTS
+  INBOX
+  SENT
+  SPAM
+  TRASH
+}
+
+enum EmailPriority {
+  HIGH
+  LOW
+  NORMAL
+  URGENT
+}
+
+enum EmailStatus {
+  ARCHIVED
+  DRAFT
+  RECEIVED
+  SENT
+}
+
+type EmailThread {
+  createdAt: DateTime!
+  emailCount: Int!
+  emails: [Email!]
+  id: ID!
+  lastEmailAt: DateTime
+  participants: [String!]!
+  subject: String!
+  unreadCount: Int!
+  updatedAt: DateTime!
+  user: User!
+  userId: String!
+}
+
+type EnhancedAIResponse {
+  conversationId: String!
+  message: AIMessage!
+  retrievedDocs: [String!]
+}
+
+input ExecuteToolInput {
+  parameters: JSONObject!
+  toolId: ID!
+}
+
+input ExecuteWorkflowInput {
+  triggerData: JSONObject
+  workflowId: String!
+}
+
+enum ExecutionStatus {
+  CANCELLED
+  FAILED
+  PENDING
+  RUNNING
+  SUCCESS
+}
+
+type Formula {
+  alcoholPercentage: Float
+  allergenWarnings: [String!]
+  baseNotesPercentage: Float!
+  batchSize: Int
+  complexityScore: Int
+  createdAt: DateTime!
+  createdBy: String
+  currency: String
+  description: String
+  estimatedCost: Float
+  fibonacciRatio: Float
+  goldenRatio: Float
+  heartNotesPercentage: Float!
+  id: ID!
+  isCOSMOSCompliant: Boolean!
+  isIFRACompliant: Boolean!
+  isNatural: Boolean!
+  isPublic: Boolean!
+  isTemplate: Boolean!
+  macerationDays: Int
+  moods: [String!]
+  name: String!
+  occasions: [String!]
+  olfactiveFamilies: [String!]
+  olfactiveSignature: String
+  preparationNotes: String
+  rating: Int
+  region: String
+  safetyNotes: String
+  seasons: [String!]
+  structureType: String!
+  style: String
+  tags: [String!]
+  targetGender: String
+  topNotesPercentage: Float!
+  totalConcentration: Float!
+  type: String!
+  updatedAt: DateTime!
+  usageCount: Int
+  waterPercentage: Float
+}
+
+input GetBuildsInput {
+  appId: ID!
+  status: BuildStatus
+  type: BuildType
+  version: String
+}
+
+input GetEmailsInput {
+  folder: EmailFolder
+  isRead: Boolean
+  isStarred: Boolean
+  limit: Float
+  offset: Float
+  search: String
+  threadId: ID
+}
+
+input GetMobileAppsInput {
+  category: AppCategory
+  isPublished: Boolean
+  platform: MobilePlatform
+  search: String
+  status: AppStatus
+}
+
+input GetPluginsInput {
+  category: PluginCategory
+  featured: Boolean
+  limit: Float
+  offset: Float
+  search: String
+  status: PluginStatus
+  verified: Boolean
+}
+
+input GetPushNotificationsInput {
+  appId: ID!
+  status: NotificationStatus
+  target: NotificationTarget
+}
+
+type Ingredient {
+  allergens: [Allergen!]
+  alternatives: [String!]
+  boilingPoint: Float
+  casNumber: String
+  chemicalFormula: String
+  conflictsWith: [String!]
+  countryOfOrigin: String
+  createdAt: DateTime!
+  culturalSignificance: [String!]
+  description: String
+  diffusion: Float!
+  id: ID!
+  ifraMaxCategory1: Float!
+  ifraMaxCategory2: Float!
+  ifraMaxCategory3: Float!
+  ifraMaxCategory4: Float!
+  ifraMaxCategory5: Float!
+  ifraMaxCategory6: Float!
+  ifraMaxCategory7: Float!
+  ifraMaxCategory8: Float!
+  ifraMaxCategory9: Float!
+  ifraMaxCategory10: Float!
+  ifraMaxCategory11: Float!
+  isCOSMOSApproved: Boolean!
+  isEcoResponsible: Boolean!
+  isHalal: Boolean!
+  isNatural: Boolean!
+  isVegan: Boolean!
+  iupacName: String
+  molecularWeight: Float
+  name: String!
+  odorProfile: [String!]
+  olfactiveFamily: OlfactiveFamily!
+  origin: String!
+  pricePerKg: Float
+  recommendedDosageMax: Float
+  recommendedDosageMin: Float
+  safetyNotes: String
+  solubilityInAlcohol: Float
+  solubilityInWater: Float
+  storageConditions: String
+  strength: Float!
+  supplier: String
+  synergiesWith: [String!]
+  tenacity: Float!
+  updatedAt: DateTime!
+  volatility: String!
+  volatilityIndex: Int!
+}
+
+input InstallPluginInput {
+  pluginId: ID!
+}
+
+enum InstallationStatus {
+  FAILED
+  INSTALLED
+  INSTALLING
+  UNINSTALLED
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+"""
+The `JSONObject` scalar type represents JSON objects as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSONObject
+
+input JoinVideoCallInput {
+  callId: ID!
+}
+
+enum LogLevel {
+  DEBUG
+  ERROR
+  INFO
+  WARNING
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+type MCPServer {
+  config: JSONObject
+  createdAt: DateTime!
+  createdBy: User!
+  createdById: String!
+  description: String
+  headers: JSONObject
+  id: ID!
+  isEnabled: Boolean!
+  isPublic: Boolean!
+  lastConnectedAt: DateTime
+  lastError: String
+  name: String!
+  status: MCPServerStatus!
+  tools: [MCPTool!]
+  type: MCPServerType!
+  updatedAt: DateTime!
+  url: String!
+}
+
+enum MCPServerStatus {
+  CONNECTED
+  DISCONNECTED
+  ERROR
+}
+
+enum MCPServerType {
+  HTTP
+  STDIO
+  WEBSOCKET
+}
+
+type MCPTool {
+  createdAt: DateTime!
+  description: String
+  examples: JSONObject
+  id: ID!
+  isEnabled: Boolean!
+  lastUsedAt: DateTime
+  name: String!
+  schema: JSONObject!
+  server: MCPServer!
+  serverId: String!
+  tags: [String!]
+  updatedAt: DateTime!
+  usageCount: Int!
+}
+
+type Message {
+  attachments: JSONObject
+  channel: Channel!
+  content: String!
+  createdAt: DateTime!
+  id: ID!
+  isEdited: Boolean!
+  mentions: JSONObject
+  reactions: JSONObject
+  replyTo: Message
+  replyToId: String
+  updatedAt: DateTime!
+  user: User!
+}
+
+type MobileApp {
+  activeUsers: Float!
+  apnsCertificate: String
+  appStoreUrl: String
+  averageRating: Float
+  builds: [MobileAppBuild!]
+  bundleId: String
+  category: AppCategory!
+  createdAt: DateTime!
+  currentBuildNumber: Float!
+  currentVersion: String!
+  description: String
+  fcmServerKey: String
+  iconUrl: String
+  id: ID!
+  isOfflineEnabled: Boolean!
+  isPublished: Boolean!
+  isPushEnabled: Boolean!
+  name: String!
+  owner: User!
+  packageName: String
+  platform: MobilePlatform!
+  playStoreUrl: String
+  publishedAt: DateTime
+  reviewCount: Float!
+  screenshots: [String!]
+  slug: String!
+  status: AppStatus!
+  totalDownloads: Float!
+  updatedAt: DateTime!
+}
+
+type MobileAppBuild {
+  androidBuildUrl: String
+  app: MobileApp!
+  branchName: String
+  buildDuration: Int
+  buildLogUrl: String
+  buildNumber: Int!
+  changelog: String
+  commitHash: String
+  completedAt: DateTime
+  crashCount: Int!
+  createdAt: DateTime!
+  createdBy: User!
+  downloadCount: Int!
+  errorMessage: String
+  id: ID!
+  installCount: Int!
+  iosBuildUrl: String
+  isBeta: Boolean!
+  isMandatoryUpdate: Boolean!
+  publishedAt: DateTime
+  releaseNotes: String
+  startedAt: DateTime
+  status: BuildStatus!
+  type: BuildType!
+  updatedAt: DateTime!
+  version: String!
+}
+
+enum MobilePlatform {
+  ANDROID
+  BOTH
+  IOS
+}
+
+type MobilePushNotification {
+  app: MobileApp!
+  badge: String
+  clickedCount: Int!
+  createdAt: DateTime!
+  createdBy: User!
+  data: JSON
+  deepLink: String
+  deliveredCount: Int!
+  errorMessage: String
+  failedCount: Int!
+  iconUrl: String
+  id: ID!
+  imageUrl: String
+  isSilent: Boolean!
+  message: String!
+  openedCount: Int!
+  priority: NotificationPriority!
+  scheduledAt: DateTime
+  sendToAndroid: Boolean!
+  sendToIos: Boolean!
+  sentAt: DateTime
+  sound: String
+  status: NotificationStatus!
+  target: NotificationTarget!
+  targetSegments: [String!]
+  targetUserIds: [String!]
+  title: String!
+  totalRecipients: Int!
+  ttlSeconds: Float!
+  updatedAt: DateTime!
+}
+
+type Mutation {
+  addChannelMember(channelId: ID!, userId: ID!): Channel!
+  addDatabaseColumn(input: CreateColumnInput!, tableId: String!): DatabaseColumn!
+  addReaction(input: AddReactionInput!): Message!
+  aiChat(message: String!): AIResponseType!
+  bulkDeleteDatabaseRecords(ids: [String!]!): Int!
+  composeEmailWithAI(prompt: String!): Email!
+  connectMCPServer(id: ID!): MCPServer!
+  createAIConversation(input: CreateConversationInput!): AIConversation!
+  createBuild(input: CreateBuildInput!): MobileAppBuild!
+  createChannel(input: CreateChannelInput!): Channel!
+  createComponent(input: CreateComponentInput!): PageComponent!
+  createDatabaseRecord(data: JSONObject!, tableId: String!): DatabaseRecord!
+  createDatabaseTable(input: CreateTableInput!, userId: String!): DatabaseTable!
+  createDocument(input: CreateDocumentInput!): Document!
+  createEmail(input: CreateEmailInput!): Email!
+  createFibonacciFormula(complexity: String! = "medium", ingredientIds: [ID!]!, name: String!): Formula!
+  createMCPServer(input: CreateMCPServerInput!): MCPServer!
+  createMessage(input: CreateMessageInput!): Message!
+  createMobileApp(input: CreateMobileAppInput!): MobileApp!
+  createPage(input: CreatePageInput!): Page!
+  createPlugin(input: CreatePluginInput!): Plugin!
+  createPresentation(input: CreatePresentationInput!): Presentation!
+  createPushNotification(input: CreatePushNotificationInput!): MobilePushNotification!
+  createReview(input: CreateReviewInput!): PluginReview!
+  createSpreadsheet(input: CreateSpreadsheetInput!): Spreadsheet!
+  createVideoCall(input: CreateVideoCallInput!): VideoCall!
+  createWorkflow(input: CreateWorkflowInput!): Workflow!
+  deleteAIConversation(id: ID!): Boolean!
+  deleteChannel(id: ID!): Boolean!
+  deleteComponent(id: ID!): Boolean!
+  deleteDatabaseColumn(id: String!): Boolean!
+  deleteDatabaseRecord(id: String!): Boolean!
+  deleteDatabaseTable(id: String!): Boolean!
+  deleteDocument(id: ID!): Boolean!
+  deleteEmail(id: ID!): Boolean!
+  deleteMCPServer(id: ID!): Boolean!
+  deleteMessage(id: ID!): Boolean!
+  deleteMobileApp(id: ID!): Boolean!
+  deletePage(id: ID!): Boolean!
+  deletePlugin(id: ID!): Boolean!
+  deletePresentation(id: ID!): Boolean!
+  deletePushNotification(id: ID!): Boolean!
+  deleteSpreadsheet(id: ID!): Boolean!
+  deleteWorkflow(id: ID!): Boolean!
+  emitTyping(channelId: ID!): Boolean!
+  endVideoCall(callId: ID!): VideoCall!
+  executeMCPTool(input: ExecuteToolInput!): JSONObject!
+  executeWorkflow(input: ExecuteWorkflowInput!): WorkflowExecution!
+  generateAIReply(emailId: ID!, replyIntent: String!): String!
+  installPlugin(input: InstallPluginInput!): PluginInstallation!
+  joinVideoCall(input: JoinVideoCallInput!): VideoCallParticipant!
+  leaveVideoCall(callId: ID!): Boolean!
+  login(input: LoginInput!): AuthPayload!
+  publishBuild(id: ID!): MobileAppBuild!
+  publishMobileApp(id: ID!): MobileApp!
+  publishPage(id: ID!): Page!
+  register(input: RegisterInput!): AuthPayload!
+  reindexWorkspace: ReindexResult!
+  removeChannelMember(channelId: ID!, userId: ID!): Channel!
+  removeReaction(input: AddReactionInput!): Message!
+  reorderComponents(componentIds: [ID!]!, pageId: ID!): [PageComponent!]!
+  seedMarketplace: Boolean!
+  seedMobileApps: Boolean!
+  sendAIMessage(input: SendMessageInput!): EnhancedAIResponse!
+  sendPushNotification(input: SendPushNotificationInput!): MobilePushNotification!
+  sendWebRTCSignal(input: WebRTCSignalInput!): Boolean!
+  togglePinConversation(id: ID!): AIConversation!
+  togglePlugin(pluginId: ID!): PluginInstallation!
+  toggleWorkflowEnabled(id: ID!): Workflow!
+  uninstallPlugin(pluginId: ID!): Boolean!
+  unpublishPage(id: ID!): Page!
+  updateBuild(input: UpdateBuildInput!): MobileAppBuild!
+  updateChannel(id: ID!, input: UpdateChannelInput!): Channel!
+  updateComponent(id: ID!, input: UpdateComponentInput!): PageComponent!
+  updateDatabaseRecord(data: JSONObject!, id: String!): DatabaseRecord!
+  updateDatabaseTable(description: String, icon: String, id: String!, name: String): DatabaseTable!
+  updateDocument(input: UpdateDocumentInput!): Document!
+  updateEmail(input: UpdateEmailInput!): Email!
+  updateMCPServer(input: UpdateMCPServerInput!): MCPServer!
+  updateMessage(id: ID!, input: UpdateMessageInput!): Message!
+  updateMobileApp(input: UpdateMobileAppInput!): MobileApp!
+  updatePage(id: ID!, input: UpdatePageInput!): Page!
+  updateParticipantStatus(input: UpdateParticipantStatusInput!): VideoCallParticipant!
+  updatePlugin(input: UpdatePluginInput!): Plugin!
+  updatePresentation(input: UpdatePresentationInput!): Presentation!
+  updatePushNotification(input: UpdatePushNotificationInput!): MobilePushNotification!
+  updateSpreadsheet(input: UpdateSpreadsheetInput!): Spreadsheet!
+  updateUser(firstName: String, id: String!, lastName: String, username: String): User!
+  updateWorkflow(id: ID!, input: UpdateWorkflowInput!): Workflow!
+}
+
+enum NotificationPriority {
+  HIGH
+  LOW
+  NORMAL
+}
+
+enum NotificationStatus {
+  DRAFT
+  FAILED
+  SCHEDULED
+  SENDING
+  SENT
+}
+
+enum NotificationTarget {
+  ALL_USERS
+  SEGMENTS
+  SPECIFIC_USERS
+  TEST_USERS
+}
+
+type OlfactiveFamily {
+  category: String!
+  characteristics: [String!]
+  createdAt: DateTime!
+  description: String
+  id: ID!
+  name: String!
+  popularity: Int
+  region: String
+  synonyms: [String!]
+  updatedAt: DateTime!
+}
+
+type Page {
+  components: [PageComponent!]
+  coverImage: String
+  createdAt: DateTime!
+  createdBy: User!
+  description: String
+  icon: String
+  id: ID!
+  name: String!
+  publishedAt: DateTime
+  slug: String!
+  status: PageStatus!
+  updatedAt: DateTime!
+}
+
+type PageComponent {
+  children: [PageComponent!]
+  id: ID!
+  order: Int!
+  parentId: String
+  properties: JSONObject!
+  style: JSONObject
+  type: String!
+}
+
+enum PageStatus {
+  ARCHIVED
+  DRAFT
+  PUBLISHED
+}
+
+type PaginatedRecordsResponse {
+  limit: Int!
+  page: Int!
+  records: [DatabaseRecord!]!
+  total: Int!
+  totalPages: Int!
+}
+
+type Plugin {
+  author: String!
+  authorId: String!
+  authorUser: User!
+  averageRating: Float!
+  category: PluginCategory!
+  config: JSONObject
+  createdAt: DateTime!
+  description: String!
+  documentationUrl: String
+  downloadCount: Int!
+  downloadUrl: String!
+  homepageUrl: String
+  iconUrl: String
+  id: ID!
+  installCount: Int!
+  installations: [PluginInstallation!]
+  isFeatured: Boolean!
+  isVerified: Boolean!
+  longDescription: String
+  name: String!
+  permissions: JSONObject
+  publishedAt: DateTime
+  repositoryUrl: String
+  reviewCount: Int!
+  reviews: [PluginReview!]
+  screenshots: [String!]
+  slug: String!
+  status: PluginStatus!
+  tags: [String!]
+  updatedAt: DateTime!
+  version: String!
+}
+
+enum PluginCategory {
+  AI_ML
+  ANALYTICS
+  AUTOMATION
+  COMMUNICATION
+  DESIGN
+  INTEGRATION
+  OTHER
+  PRODUCTIVITY
+  UTILITIES
+}
+
+type PluginInstallation {
+  errorMessage: String
+  id: ID!
+  installedAt: DateTime!
+  installedVersion: String!
+  isEnabled: Boolean!
+  lastUsedAt: DateTime
+  plugin: Plugin!
+  pluginId: String!
+  settings: JSONObject
+  status: InstallationStatus!
+  updatedAt: DateTime!
+  user: User!
+  userId: String!
+}
+
+type PluginReview {
+  comment: String
+  createdAt: DateTime!
+  id: ID!
+  plugin: Plugin!
+  pluginId: String!
+  rating: Int!
+  updatedAt: DateTime!
+  user: User!
+  userId: String!
+}
+
+enum PluginStatus {
+  DEPRECATED
+  DRAFT
+  PUBLISHED
+  SUSPENDED
+}
+
+type Presentation {
+  collaborators: [User!]
+  createdAt: DateTime!
+  createdBy: User!
+  createdById: String!
+  description: String
+  icon: String
+  id: ID!
+  slideCount: Int!
+  slides: JSONObject!
+  tags: [String!]
+  theme: String
+  title: String!
+  updatedAt: DateTime!
+}
+
+type Query {
+  aiAnalytics: AIAnalytics!
+  aiConversation(id: ID!): AIConversation!
+  aiConversations: [AIConversation!]!
+  aiMessages(conversationId: ID!, limit: Int): [AIMessage!]!
+  aiQueryData(question: String!, tableId: String!): AIResponseType!
+  aiSuggestColumns(description: String!, tableName: String!): AIResponseType!
+  build(id: ID!): MobileAppBuild!
+  builds(input: GetBuildsInput!): [MobileAppBuild!]!
+  calculateFibonacciRatios(complexity: String! = "medium"): String!
+  calculateFormulaBatch(batchSizeML: Float!, formulaId: ID!): String!
+  channel(id: ID!): Channel!
+  channels: [Channel!]!
+  component(id: ID!): PageComponent!
+  composeMoodPerfume(intensity: Float! = 5, mood: String!, season: String, timeOfDay: String): String!
+  databaseRecord(id: String!): DatabaseRecord!
+  databaseRecordCount(tableId: String!): Int!
+  databaseRecords(filters: RecordFiltersInput, tableId: String!): PaginatedRecordsResponse!
+  databaseTable(id: String!): DatabaseTable!
+  databaseTableBySlug(slug: String!): DatabaseTable!
+  databaseTables: [DatabaseTable!]!
+  detectConflicts(ingredientIds: [ID!]!): String!
+  document(id: ID!): Document!
+  documents: [Document!]!
+  email(id: ID!): Email!
+  emailThreads: [EmailThread!]!
+  emails(input: GetEmailsInput): [Email!]!
+  executionLogs(executionId: ID!): [WorkflowLog!]!
+  exportFormulaToCSV(batchSizeML: Float, formulaId: ID!): String!
+  exportFormulaToJSON(formulaId: ID!, includeIFRAData: Boolean! = true, includeIngredients: Boolean! = true): String!
+  exportIFRACertificate(category: Float! = 4, formulaId: ID!, language: String! = "english"): String!
+  exportProductionSheet(batchSizeML: Float!, formulaId: ID!, language: String! = "english"): String!
+  exportQuickReference(formulaId: ID!): String!
+  findOppositeIngredients(ingredientName: String!, limit: Float! = 10): String!
+  findSimilarIngredients(ingredientName: String!, limit: Float! = 10): String!
+  generateNameFromIngredients(ingredientNames: [String!]!): String!
+  generateOlfactoryMap: String!
+  generatePerfumeNames(language: String! = "mixed", mood: String, region: String, style: String, styleType: String! = "luxury"): String!
+  getAIRecommendations(complexity: String! = "medium", mood: String, naturalOnly: Boolean! = false, region: String, style: String): String!
+  getAllFormulas: [Formula!]!
+  getAllIngredients: [Ingredient!]!
+  getAllOlfactiveFamilies: [OlfactiveFamily!]!
+  getClimateRecommendations(climate: String!): String!
+  getFormulaById(id: ID!): Formula!
+  getIngredientsByFamily(familyName: String!): [Ingredient!]!
+  getIngredientsByRegion(region: String!): [Ingredient!]!
+  getKnownPerfumes: String!
+  getMoodRecommendations(season: String!, timeOfDay: String!): String!
+  getSeasonalProfile(season: String!): String!
+  installedPlugins: [PluginInstallation!]!
+  mcpServer(id: ID!): MCPServer!
+  mcpServers: [MCPServer!]!
+  mcpTools(serverId: ID): [MCPTool!]!
+  me: User!
+  message(id: ID!): Message!
+  messages(channelId: ID!, limit: Int, offset: Int): [Message!]!
+  mobileApp(id: ID!): MobileApp!
+  mobileApps(input: GetMobileAppsInput): [MobileApp!]!
+  optimizeFormulaForSeasonalConditions(altitude: Float, baseConcentration: Float!, climate: String, formulaId: ID!, humidity: Float!, season: String, temperature: Float!): String!
+  page(id: ID!): Page!
+  pageBySlug(slug: String!): Page!
+  pageComponents(pageId: ID!): [PageComponent!]!
+  pages: [Page!]!
+  plugin(id: ID!): Plugin!
+  pluginReviews(pluginId: ID!): [PluginReview!]!
+  plugins(input: GetPluginsInput): [Plugin!]!
+  presentation(id: ID!): Presentation!
+  presentations: [Presentation!]!
+  pushNotification(id: ID!): MobilePushNotification!
+  pushNotifications(input: GetPushNotificationsInput!): [MobilePushNotification!]!
+  reverseEngineerPerfume(baseNotes: [String!], brand: String, dominantFamily: String, heartNotes: [String!], perfumeName: String, style: String, topNotes: [String!]): String!
+  searchIngredients(query: String!): [Ingredient!]!
+  searchKnownPerfumes(query: String!): String!
+  simulateSkinChemistry(formulaId: ID!, moistureLevel: Float, skinTemperature: String, skinType: String!, skinpH: String!): String!
+  spreadsheet(id: ID!): Spreadsheet!
+  spreadsheets: [Spreadsheet!]!
+  user(id: String!): User!
+  users: [User!]!
+  validateFormulaIFRA(category: Float! = 4, formulaId: ID!): String!
+  videoCall(id: ID!): VideoCall!
+  videoCalls: [VideoCall!]!
+  workflow(id: ID!): Workflow!
+  workflowExecution(id: ID!): WorkflowExecution!
+  workflowExecutions(limit: Int, workflowId: ID!): [WorkflowExecution!]!
+  workflows: [Workflow!]!
+}
+
+input RecordFiltersInput {
+  filters: JSONObject
+  limit: Int
+  page: Int
+  search: String
+  sortBy: String
+  sortOrder: String
+}
+
+input RegisterInput {
+  email: String!
+  firstName: String
+  lastName: String
+  password: String!
+}
+
+type ReindexResult {
+  pages: Int!
+  tables: Int!
+  total: Int!
+}
+
+input SendMessageInput {
+  conversationId: String!
+  message: String!
+  useRAG: Boolean
+}
+
+input SendPushNotificationInput {
+  id: ID!
+  sendImmediately: Boolean
+}
+
+type Spreadsheet {
+  collaborators: [User!]
+  createdAt: DateTime!
+  createdBy: User!
+  createdById: String!
+  description: String
+  icon: String
+  id: ID!
+  sheetCount: Int!
+  sheets: JSONObject!
+  tags: [String!]
+  title: String!
+  updatedAt: DateTime!
+}
+
+enum TriggerType {
+  MANUAL
+  RECORD_CREATED
+  RECORD_DELETED
+  RECORD_UPDATED
+  SCHEDULE
+  WEBHOOK
+}
+
+input UpdateBuildInput {
+  androidBuildUrl: String
+  buildDuration: Int
+  buildLogUrl: String
+  changelog: String
+  errorMessage: String
+  id: ID!
+  iosBuildUrl: String
+  releaseNotes: String
+  status: BuildStatus
+}
+
+input UpdateChannelInput {
+  coverImage: String
+  description: String
+  icon: String
+  name: String
+}
+
+input UpdateComponentInput {
+  order: Int
+  parentId: String
+  properties: JSONObject
+  style: JSONObject
+  type: String
+}
+
+input UpdateDocumentInput {
+  content: JSONObject
+  description: String
+  icon: String
+  id: ID!
+  status: DocumentStatus
+  tags: [String!]
+  title: String
+  visibility: DocumentVisibility
+}
+
+input UpdateEmailInput {
+  folder: EmailFolder
+  id: ID!
+  isImportant: Boolean
+  isRead: Boolean
+  isStarred: Boolean
+  labels: [String!]
+}
+
+input UpdateMCPServerInput {
+  config: JSONObject
+  description: String
+  headers: JSONObject
+  id: ID!
+  isEnabled: Boolean
+  isPublic: Boolean
+  name: String
+  url: String
+}
+
+input UpdateMessageInput {
+  content: String!
+}
+
+input UpdateMobileAppInput {
+  apnsCertificate: String
+  appStoreUrl: String
+  bundleId: String
+  category: AppCategory
+  currentBuildNumber: Int
+  currentVersion: String
+  description: String
+  fcmServerKey: String
+  iconUrl: String
+  id: ID!
+  isOfflineEnabled: Boolean
+  isPushEnabled: Boolean
+  name: String
+  packageName: String
+  playStoreUrl: String
+  screenshots: [String!]
+  status: AppStatus
+}
+
+input UpdatePageInput {
+  coverImage: String
+  description: String
+  icon: String
+  name: String
+  slug: String
+  status: PageStatus
+}
+
+input UpdateParticipantStatusInput {
+  callId: ID!
+  isAudioEnabled: Boolean
+  isScreenSharing: Boolean
+  isVideoEnabled: Boolean
+}
+
+input UpdatePluginInput {
+  category: PluginCategory
+  description: String
+  documentationUrl: String
+  downloadUrl: String
+  homepageUrl: String
+  iconUrl: String
+  id: ID!
+  longDescription: String
+  name: String
+  repositoryUrl: String
+  screenshots: [String!]
+  status: PluginStatus
+  tags: [String!]
+  version: String
+}
+
+input UpdatePresentationInput {
+  description: String
+  icon: String
+  id: ID!
+  slides: JSONObject
+  tags: [String!]
+  theme: String
+  title: String
+}
+
+input UpdatePushNotificationInput {
+  id: ID!
+  message: String
+  priority: NotificationPriority
+  scheduledAt: DateTime
+  status: NotificationStatus
+  title: String
+}
+
+input UpdateSpreadsheetInput {
+  description: String
+  icon: String
+  id: ID!
+  sheets: JSONObject
+  tags: [String!]
+  title: String
+}
+
+input UpdateWorkflowInput {
+  description: String
+  edges: JSONObject
+  enabled: Boolean
+  name: String
+  nodes: JSONObject
+  triggerConfig: JSONObject
+}
+
+type User {
+  avatar: String
+  createdAt: DateTime!
+  email: String!
+  firstName: String
+  fullName: String
+  id: ID!
+  isActive: Boolean!
+  isEmailVerified: Boolean!
+  isVerified: Boolean!
+  lastLoginAt: DateTime
+  lastName: String
+  roles: [String!]!
+  updatedAt: DateTime!
+  username: String
+}
+
+type VideoCall {
+  channel: Channel
+  channelId: String
+  endedAt: DateTime
+  id: ID!
+  name: String!
+  participants: [VideoCallParticipant!]
+  startedAt: DateTime!
+  startedBy: User!
+  startedById: String!
+  status: CallStatus!
+  updatedAt: DateTime!
+}
+
+type VideoCallParticipant {
+  call: VideoCall!
+  callId: String!
+  id: ID!
+  isAudioEnabled: Boolean!
+  isScreenSharing: Boolean!
+  isVideoEnabled: Boolean!
+  joinedAt: DateTime!
+  leftAt: DateTime
+  user: User!
+  userId: String!
+}
+
+input WebRTCSignalInput {
+  callId: ID!
+  data: String!
+  targetUserId: ID!
+  type: String!
+}
+
+type Workflow {
+  createdAt: DateTime!
+  createdBy: User!
+  description: String
+  edges: JSONObject!
+  enabled: Boolean!
+  executionCount: Int!
+  executions: [WorkflowExecution!]
+  id: ID!
+  lastExecutedAt: DateTime
+  name: String!
+  nodes: JSONObject!
+  triggerConfig: JSONObject!
+  triggerType: TriggerType!
+  updatedAt: DateTime!
+}
+
+type WorkflowExecution {
+  completedAt: DateTime
+  createdAt: DateTime!
+  durationMs: Int
+  error: String
+  id: ID!
+  logs: [WorkflowLog!]
+  result: JSONObject
+  status: ExecutionStatus!
+  triggerData: JSONObject
+  workflow: Workflow!
+}
+
+type WorkflowLog {
+  createdAt: DateTime!
+  data: JSONObject
+  execution: WorkflowExecution!
+  id: ID!
+  level: LogLevel!
+  message: String!
+  nodeId: String!
+}

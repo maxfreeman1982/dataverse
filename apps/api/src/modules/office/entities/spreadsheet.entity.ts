@@ -11,7 +11,7 @@ import {
 } from 'typeorm';
 import { ObjectType, Field, ID, Int } from '@nestjs/graphql';
 import { GraphQLJSONObject } from 'graphql-type-json';
-import { User } from '../../auth/entities/user.entity';
+import { User } from '../../users/user.entity';
 
 @ObjectType()
 @Entity('spreadsheets')

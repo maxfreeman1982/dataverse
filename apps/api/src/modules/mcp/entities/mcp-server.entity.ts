@@ -10,7 +10,7 @@ import {
 } from 'typeorm';
 import { ObjectType, Field, ID, registerEnumType } from '@nestjs/graphql';
 import { GraphQLJSONObject } from 'graphql-type-json';
-import { User } from '../../auth/entities/user.entity';
+import { User } from '../../users/user.entity';
 import { MCPTool } from './mcp-tool.entity';
 
 export enum MCPServerStatus {

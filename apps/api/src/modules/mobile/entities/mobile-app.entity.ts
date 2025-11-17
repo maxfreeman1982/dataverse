@@ -9,7 +9,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { ObjectType, Field, ID, registerEnumType } from '@nestjs/graphql';
-import { User } from '../../auth/entities/user.entity';
+import { User } from '../../users/user.entity';
 import { MobileAppBuild } from './mobile-app-build.entity';
 
 export enum MobilePlatform {

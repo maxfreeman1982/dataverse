@@ -9,7 +9,7 @@ import {
 } from 'typeorm';
 import { ObjectType, Field, ID, registerEnumType, Int } from '@nestjs/graphql';
 import { MobileApp } from './mobile-app.entity';
-import { User } from '../../auth/entities/user.entity';
+import { User } from '../../users/user.entity';
 
 export enum BuildStatus {
   PENDING = 'pending',

@@ -2,7 +2,7 @@ import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
 import { GqlAuthGuard } from '../auth/guards/gql-auth.guard';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import { User } from '../auth/entities/user.entity';
+import { User } from '../users/user.entity';
 import { VideoService } from './video.service';
 import { VideoCall } from './entities/video-call.entity';
 import { VideoCallParticipant } from './entities/video-call-participant.entity';
