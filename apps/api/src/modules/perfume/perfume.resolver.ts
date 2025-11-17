@@ -2,6 +2,10 @@ import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
 import { PerfumeService } from './services/perfume.service';
 import { AIRecommendationService, RecommendationRequest } from './services/ai-recommendation.service';
 import { MoodComposerService } from './services/mood-composer.service';
+import { SeasonalOptimizerService } from './services/seasonal-optimizer.service';
+import { SkinChemistryService } from './services/skin-chemistry.service';
+import { ReverseEngineerService } from './services/reverse-engineer.service';
+import { OlfactoryMapService } from './services/olfactory-map.service';
 import { Ingredient } from './entities/ingredient.entity';
 import { OlfactiveFamily } from './entities/olfactive-family.entity';
 import { Formula } from './entities/formula.entity';
@@ -13,6 +17,10 @@ export class PerfumeResolver {
     private perfumeService: PerfumeService,
     private aiRecommendationService: AIRecommendationService,
     private moodComposerService: MoodComposerService,
+    private seasonalOptimizerService: SeasonalOptimizerService,
+    private skinChemistryService: SkinChemistryService,
+    private reverseEngineerService: ReverseEngineerService,
+    private olfactoryMapService: OlfactoryMapService,
   ) {}
 
   // ═══════════════════════════════════════════════════════════════
@@ -301,5 +309,184 @@ export class PerfumeResolver {
     const { MoodComposerService } = require('./services/mood-composer.service');
     const recommendations = MoodComposerService.getMoodRecommendations(timeOfDay, season);
     return JSON.stringify(recommendations, null, 2);
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // SEASONAL OPTIMIZATION
+  // ═══════════════════════════════════════════════════════════════
+
+  @Query(() => String)
+  async optimizeFormulaForSeasonalConditions(
+    @Args('formulaId', { type: () => ID }) formulaId: string,
+    @Args('baseConcentration') baseConcentration: number,
+    @Args('temperature') temperature: number,
+    @Args('humidity') humidity: number,
+    @Args('season', { nullable: true }) season?: string,
+    @Args('climate', { nullable: true }) climate?: string,
+    @Args('altitude', { nullable: true }) altitude?: number,
+  ): Promise<string> {
+    const formula = await this.perfumeService.getFormulaById(formulaId);
+
+    const conditions = {
+      temperature,
+      humidity,
+      season: season as any,
+      climate: climate as any,
+      altitude,
+    };
+
+    const optimization = this.seasonalOptimizerService.optimizeForConditions(
+      formula,
+      baseConcentration,
+      conditions,
+    );
+
+    return JSON.stringify(optimization, null, 2);
+  }
+
+  @Query(() => String)
+  async getSeasonalProfile(
+    @Args('season') season: string,
+  ): Promise<string> {
+    const profile = this.seasonalOptimizerService.getSeasonalProfile(season as any);
+    return JSON.stringify(profile, null, 2);
+  }
+
+  @Query(() => String)
+  async getClimateRecommendations(
+    @Args('climate') climate: string,
+  ): Promise<string> {
+    const recommendations = this.seasonalOptimizerService.getClimateRecommendations(climate as any);
+    return JSON.stringify(recommendations, null, 2);
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // SKIN CHEMISTRY SIMULATION
+  // ═══════════════════════════════════════════════════════════════
+
+  @Query(() => String)
+  async simulateSkinChemistry(
+    @Args('formulaId', { type: () => ID }) formulaId: string,
+    @Args('skinType') skinType: string,
+    @Args('skinpH') skinpH: string,
+    @Args('skinTemperature', { nullable: true }) skinTemperature?: string,
+    @Args('moistureLevel', { nullable: true }) moistureLevel?: number,
+  ): Promise<string> {
+    const formula = await this.perfumeService.getFormulaById(formulaId);
+
+    const skinProfile = {
+      skinType: skinType as any,
+      pH: skinpH as any,
+      skinTemperature: skinTemperature as any,
+      moistureLevel,
+    };
+
+    const simulation = this.skinChemistryService.simulateSkinInteraction(formula, skinProfile);
+    return JSON.stringify(simulation, null, 2);
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // REVERSE ENGINEERING
+  // ═══════════════════════════════════════════════════════════════
+
+  @Query(() => String)
+  async reverseEngineerPerfume(
+    @Args('perfumeName', { nullable: true }) perfumeName?: string,
+    @Args('brand', { nullable: true }) brand?: string,
+    @Args('topNotes', { type: () => [String], nullable: true }) topNotes?: string[],
+    @Args('heartNotes', { type: () => [String], nullable: true }) heartNotes?: string[],
+    @Args('baseNotes', { type: () => [String], nullable: true }) baseNotes?: string[],
+    @Args('dominantFamily', { nullable: true }) dominantFamily?: string,
+    @Args('style', { nullable: true }) style?: string,
+  ): Promise<string> {
+    const ingredients = await this.perfumeService.getAllIngredients();
+
+    const analysisInput = {
+      perfumeName,
+      brand,
+      topNotes,
+      heartNotes,
+      baseNotes,
+      dominantFamily,
+      style,
+    };
+
+    const reconstruction = await this.reverseEngineerService.analyzeAndReconstruct(
+      analysisInput,
+      ingredients,
+    );
+
+    return JSON.stringify(reconstruction, null, 2);
+  }
+
+  @Query(() => String)
+  async getKnownPerfumes(): Promise<string> {
+    const perfumes = this.reverseEngineerService.getAllKnownPerfumes();
+    return JSON.stringify(perfumes, null, 2);
+  }
+
+  @Query(() => String)
+  async searchKnownPerfumes(
+    @Args('query') query: string,
+  ): Promise<string> {
+    const perfumes = this.reverseEngineerService.searchKnownPerfumes(query);
+    return JSON.stringify(perfumes, null, 2);
+  }
+
+  // ═══════════════════════════════════════════════════════════════
+  // 3D OLFACTORY MAPPING
+  // ═══════════════════════════════════════════════════════════════
+
+  @Query(() => String)
+  async generateOlfactoryMap(): Promise<string> {
+    const ingredients = await this.perfumeService.getAllIngredients();
+    const map = this.olfactoryMapService.generateOlfactoryMap(ingredients);
+    return JSON.stringify(map, null, 2);
+  }
+
+  @Query(() => String)
+  async findSimilarIngredients(
+    @Args('ingredientName') ingredientName: string,
+    @Args('limit', { defaultValue: 10 }) limit?: number,
+  ): Promise<string> {
+    const ingredients = await this.perfumeService.getAllIngredients();
+    const targetIngredient = ingredients.find(i =>
+      i.name.toLowerCase().includes(ingredientName.toLowerCase())
+    );
+
+    if (!targetIngredient) {
+      return JSON.stringify({ error: 'Ingredient not found' }, null, 2);
+    }
+
+    const similar = this.olfactoryMapService.findSimilarIngredients(
+      targetIngredient,
+      ingredients,
+      limit,
+    );
+
+    return JSON.stringify(similar, null, 2);
+  }
+
+  @Query(() => String)
+  async findOppositeIngredients(
+    @Args('ingredientName') ingredientName: string,
+    @Args('limit', { defaultValue: 10 }) limit?: number,
+  ): Promise<string> {
+    const ingredients = await this.perfumeService.getAllIngredients();
+    const targetIngredient = ingredients.find(i =>
+      i.name.toLowerCase().includes(ingredientName.toLowerCase())
+    );
+
+    if (!targetIngredient) {
+      return JSON.stringify({ error: 'Ingredient not found' }, null, 2);
+    }
+
+    const opposites = this.olfactoryMapService.findOppositeIngredients(
+      targetIngredient,
+      ingredients,
+      limit,
+    );
+
+    return JSON.stringify(opposites, null, 2);
   }
 }

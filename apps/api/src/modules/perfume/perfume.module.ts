@@ -8,6 +8,10 @@ import { FormulaIngredient } from './entities/formula-ingredient.entity';
 import { PerfumeService } from './services/perfume.service';
 import { AIRecommendationService } from './services/ai-recommendation.service';
 import { MoodComposerService } from './services/mood-composer.service';
+import { SeasonalOptimizerService } from './services/seasonal-optimizer.service';
+import { SkinChemistryService } from './services/skin-chemistry.service';
+import { ReverseEngineerService } from './services/reverse-engineer.service';
+import { OlfactoryMapService } from './services/olfactory-map.service';
 import { PerfumeResolver } from './perfume.resolver';
 
 @Module({
@@ -24,8 +28,20 @@ import { PerfumeResolver } from './perfume.resolver';
     PerfumeService,
     AIRecommendationService,
     MoodComposerService,
+    SeasonalOptimizerService,
+    SkinChemistryService,
+    ReverseEngineerService,
+    OlfactoryMapService,
     PerfumeResolver,
   ],
-  exports: [PerfumeService, AIRecommendationService, MoodComposerService],
+  exports: [
+    PerfumeService,
+    AIRecommendationService,
+    MoodComposerService,
+    SeasonalOptimizerService,
+    SkinChemistryService,
+    ReverseEngineerService,
+    OlfactoryMapService,
+  ],
 })
 export class PerfumeModule {}
