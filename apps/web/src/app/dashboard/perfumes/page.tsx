@@ -14,7 +14,7 @@ import {
 } from '@/graphql/perfume';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Beaker, FlaskConical, Flower2, AlertTriangle, Plus, Shield, ShieldAlert, Download, Sparkles, Package, ArrowLeftRight, BarChart3, Star, CircleDot } from 'lucide-react';
+import { Beaker, FlaskConical, Flower2, AlertTriangle, Plus, Shield, ShieldAlert, Download, Sparkles, Package, ArrowLeftRight, BarChart3, Star, CircleDot, Boxes } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { generateComplianceReport, getComplianceStatus, type FormulaIngredientInput } from '@/lib/compliance';
 
@@ -63,6 +63,15 @@ export default function PerfumesPage() {
         <div className="flex items-center space-x-2">
           <Button
             variant="outline"
+            size="sm"
+            onClick={() => window.location.href = '/dashboard/perfumes/inventory'}
+          >
+            <Boxes className="mr-2 h-4 w-4" />
+            Inventory
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
             onClick={() => window.location.href = '/dashboard/perfumes/accords'}
           >
             <Star className="mr-2 h-4 w-4" />
@@ -70,6 +79,7 @@ export default function PerfumesPage() {
           </Button>
           <Button
             variant="outline"
+            size="sm"
             onClick={() => window.location.href = '/dashboard/perfumes/analytics'}
           >
             <BarChart3 className="mr-2 h-4 w-4" />
@@ -77,6 +87,7 @@ export default function PerfumesPage() {
           </Button>
           <Button
             variant="outline"
+            size="sm"
             onClick={() => window.location.href = '/dashboard/perfumes/wheel'}
           >
             <CircleDot className="mr-2 h-4 w-4" />
@@ -84,6 +95,7 @@ export default function PerfumesPage() {
           </Button>
           <Button
             variant="outline"
+            size="sm"
             onClick={() => window.location.href = '/dashboard/perfumes/compare'}
           >
             <ArrowLeftRight className="mr-2 h-4 w-4" />
@@ -91,10 +103,11 @@ export default function PerfumesPage() {
           </Button>
           <Button
             variant="outline"
+            size="sm"
             onClick={() => window.location.href = '/dashboard/perfumes/notes'}
           >
             <Sparkles className="mr-2 h-4 w-4" />
-            Note Library
+            Notes
           </Button>
           <Button onClick={() => window.location.href = '/dashboard/perfumes/create'}>
             <Plus className="mr-2 h-4 w-4" />
