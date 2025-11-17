@@ -1,0 +1,958 @@
+{
+  "project": "FlowNav",
+  "version": "1.0.0",
+  "date": "2025-11-17",
+  "description": "Système de navigation prédictive avec optimisation du temps de départ, préservation de la vie privée, et réduction de la congestion",
+
+  "resume_conceptuel": {
+    "vision": "FlowNav est un système de mobilité intelligente multi-plateforme (tableau de bord véhicule, smartphone, objets connectés) qui calcule non seulement l'itinéraire optimal, mais aussi l'heure de départ optimale t₀ pour minimiser le temps de trajet tout en réduisant la contribution individuelle aux embouteillages.",
+    "differentiateurs": [
+      "Optimisation temporelle : calcul de t₀ optimal par prédiction de trafic à horizon 5-30 min",
+      "Privacy-by-design : aucune donnée de position brute transmise, agrégation spatiotemporelle obligatoire",
+      "Architecture hybride edge/cloud : traitement local temps réel + apprentissage fédéré cloud",
+      "Multi-modal : synchronisation tableau de bord, mobile, AR glasses, smartwatch",
+      "Conformité RGPD totale : identifiants éphémères, minimisation données, consentement explicite"
+    ],
+    "principe_cle": "Chaque utilisateur contribue des statistiques de trafic anonymisées (vitesse moyenne, densité par segment) et reçoit des prédictions agrégées pour optimiser son départ — gagnant-gagnant collectif sans compromis de vie privée"
+  },
+
+  "architecture_technique": {
+    "paradigme": "Edge-first computing avec agrégation cloud sécurisée",
+    "composants": [
+      {
+        "nom": "FlowNav Edge Unit (FEU)",
+        "localisation": "Embarqué (véhicule, smartphone, wearable)",
+        "fonctions": [
+          "Capture capteurs locaux (GPS, accéléromètre, gyroscope)",
+          "Calcul temps réel : position sur segment, vitesse instantanée, accélération",
+          "Agrégation locale : moyennes glissantes 30-60s avant transmission",
+          "Anonymisation : hachage segment ID, rotation device_id_ephemeral toutes les 10-15 min",
+          "Prédiction locale : cache modèle LWR + corrections IDM pour horizon 5 min",
+          "Rendu UI/UX : HUD, vocal, AR overlay temps réel (<1s latence)"
+        ],
+        "technologies": ["TensorFlow Lite", "ONNX Runtime", "WebAssembly (mobile)", "C++ (automotive ECU)"],
+        "stockage_local": "Max 7 jours traces agrégées, chiffrées AES-256, auto-destruction"
+      },
+      {
+        "nom": "FlowNav Aggregation Gateway (FAG)",
+        "localisation": "Edge régional (5G MEC, CDN edge nodes)",
+        "fonctions": [
+          "Réception agrégats device → validation anti-spam",
+          "Agrégation secondaire : fusion multi-sources par segment × fenêtre temporelle",
+          "Détection anomalies : filtrage outliers statistiques (z-score > 3)",
+          "Forward vers cloud central pour entraînement global"
+        ],
+        "latence_cible": "<500ms round-trip device ↔ gateway"
+      },
+      {
+        "nom": "FlowNav Cloud Intelligence (FCI)",
+        "localisation": "Cloud multi-région (AWS/GCP/Azure)",
+        "fonctions": [
+          "Federated Learning : entraînement modèle global sans accès données brutes",
+          "Calcul prédictions macroscopiques : champs de vitesse v(x,t) pour tous segments réseau routier",
+          "Optimisation t₀ : simulation Monte Carlo pour distribution T(t₀) par OD pair",
+          "API publique : fourniture prédictions agrégées (segment_id, time_window) → speed_forecast",
+          "Audit trail RGPD : logs consentements, requêtes effacement, traçabilité anonymisée"
+        ],
+        "technologies": ["Kubernetes", "Apache Kafka (streaming)", "TensorFlow Federated", "PostgreSQL (metadata)", "TimescaleDB (séries temporelles)"],
+        "retention_donnees": "Agrégats 90 jours, modèles 2 ans, logs RGPD 3 ans"
+      },
+      {
+        "nom": "FlowNav Sync Service (FSS)",
+        "localisation": "Cloud + edge",
+        "fonctions": [
+          "Synchronisation cross-device : utilisateur connecte dashboard + smartphone + watch",
+          "Handoff seamless : trajet commencé sur mobile → continué dashboard",
+          "State replication : préférences, historique agrégé (non positions), favoris",
+          "Protocole : WebSocket secure (WSS) + MQTT pour IoT low-power"
+        ]
+      }
+    ],
+    "flux_donnees": [
+      "1. Capteurs vehicle/mobile → FEU : acquisition 1-10 Hz",
+      "2. FEU → agrégation locale 30-60s : {segment_id, avg_speed, std_speed, count}",
+      "3. FEU → FAG : HTTPS POST toutes les 60-120s (batch)",
+      "4. FAG → FCI : Kafka stream temps réel agrégats validés",
+      "5. FCI → Federated Learning : entraînement modèle global sans données brutes",
+      "6. FCI → API prédiction : GET /forecast/{segment_id}?time_window=...",
+      "7. FEU query API → cache local prédictions 5-30 min",
+      "8. FEU calcul local t₀ optimal → UI/UX recommandation"
+    ],
+    "protocoles_communication": {
+      "device_to_gateway": "HTTPS/2 avec certificate pinning",
+      "gateway_to_cloud": "mTLS (mutual TLS) + message signing (HMAC-SHA256)",
+      "realtime_updates": "WebSocket Secure (WSS) pour HUD live",
+      "iot_wearables": "MQTT over TLS (CoAP pour ultra low-power)"
+    },
+    "synchronisation_multi_device": {
+      "mecanisme": "Event sourcing avec CRDT (Conflict-free Replicated Data Types)",
+      "resolution_conflits": "Last-write-wins avec vector clocks",
+      "offline_support": "Queue locale + sync when online, max 24h buffer"
+    }
+  },
+
+  "pipeline_donnees_privacy": {
+    "etapes": [
+      {
+        "etape": "1_Capture",
+        "description": "Capteurs embarqués (GPS, accéléromètre, CAN bus véhicule, réseau cellulaire)",
+        "frequence": "1-10 Hz selon capteur",
+        "donnees_brutes": ["latitude", "longitude", "vitesse_instantanee", "cap", "acceleration"],
+        "traitement_immediat": "Mapping lat/lon → segment_id via géohash local, position brute JAMAIS stockée >5s en mémoire volatile"
+      },
+      {
+        "etape": "2_Preprocessing_Local",
+        "description": "Filtrage bruit Kalman, détection arrêt (v<5km/h), classification segment (autoroute/urbain/rural)",
+        "sortie": "Séquence temporelle (segment_id, v_filtrée, timestamp_relatif)",
+        "privacy": "Timestamps convertis en offset relatif début session (pas d'horodatage absolu)"
+      },
+      {
+        "etape": "3_Aggregation_Spatiotemporelle",
+        "description": "Fenêtre glissante 60s : calcul {avg_speed, std_speed, veh_count} par segment",
+        "taille_min_anonymat": "k-anonymity k≥3 véhicules par segment-fenêtre, sinon suppression",
+        "binning_spatial": "Segments ≥200m urbain, ≥500m autoroute (éviter fingerprinting)",
+        "binning_temporel": "Fenêtres 1-5 min (pas de granularité seconde)"
+      },
+      {
+        "etape": "4_Anonymisation",
+        "description": "Génération device_id_ephemeral aléatoire (UUID v4) toutes les 10-15 min",
+        "segment_hashing": "segment_id = HMAC(lat_bin || lon_bin, secret_local_rotating)",
+        "suppression_attributs": "Marque/modèle véhicule, user_id, MAC addresses JAMAIS transmis",
+        "differential_privacy": "Ajout bruit laplacien (ε=0.1) sur avg_speed si count<10 (optionnel, phase 2)"
+      },
+      {
+        "etape": "5_Transmission_Securisee",
+        "description": "Batch upload agrégats toutes les 60-120s via HTTPS/2 + TLS 1.3",
+        "payload_max": "50 agrégats par requête (limite anti-fingerprinting)",
+        "rate_limiting": "Max 1 requête/min par device_id (protection DDoS)"
+      },
+      {
+        "etape": "6_Aggregation_Cloud",
+        "description": "Fusion multi-sources : moyenne pondérée par confidence score",
+        "validation": "Rejet outliers (|v - v_historique|>2σ), détection flood (source unique >30% volume)",
+        "stockage": "TimescaleDB : (segment_id, time_bucket_5min, avg_speed, std_speed, sample_count, confidence)"
+      },
+      {
+        "etape": "7_Federated_Learning",
+        "description": "Entraînement modèle prédictif LWR + LSTM sans accès données individuelles",
+        "processus": "Devices téléchargent modèle global → entraînement local 1-7 jours data → upload gradients agrégés → agrégation sécurisée (Secure Aggregation Protocol)",
+        "frequence": "Cycle FL hebdomadaire, convergence 50-100 rounds",
+        "privacy_garantie": "Aucun device ne révèle ses données, serveur ne voit que somme chiffrée des gradients"
+      }
+    ],
+    "garanties_non_identifiabilite": [
+      "k-anonymity : k≥3 véhicules par agrégat spatial-temporel",
+      "l-diversity : vitesses variées (std>5 km/h) pour éviter homogénéité",
+      "t-closeness : distribution vitesses agrégat proche distribution globale réseau",
+      "Rotation ID : impossibilité chaînage trajectoire >15 min",
+      "Pas de ré-identification GPS : résolution spatiale ≥200m, temporelle ≥60s"
+    ]
+  },
+
+  "modeles_mathematiques": {
+    "equations_fondamentales": [
+      {
+        "numero": 1,
+        "nom": "Distance d'arrêt",
+        "formule": "d_stop = v * t_r + v² / (2 * a_max)",
+        "variables": {
+          "d_stop": "Distance d'arrêt complète (m)",
+          "v": "Vitesse initiale (m/s)",
+          "t_r": "Temps de réaction conducteur (s)",
+          "a_max": "Décélération maximale (m/s²)"
+        },
+        "parametres_typiques": {
+          "t_r": "0.7-1.5 s (alerte: 0.7, distrait: 1.5, moyenne: 1.0)",
+          "a_max": "6-10 m/s² (route sèche: 8-10, mouillée: 6-7, verglas: 2-3)"
+        },
+        "usage": "Calcul distance sécurité minimale absolue, détection risque collision"
+      },
+      {
+        "numero": 2,
+        "nom": "Distance de sécurité (car-following)",
+        "formule": "d_safe = v * t_h + d_0",
+        "variables": {
+          "d_safe": "Distance inter-véhiculaire recommandée (m)",
+          "v": "Vitesse du suiveur (m/s)",
+          "t_h": "Temps de suivi (headway time) (s)",
+          "d_0": "Distance minimale à l'arrêt (m)"
+        },
+        "parametres_typiques": {
+          "t_h": "1.8-2.5 s (autoroute: 1.8, urbain: 2.5, code règle '2 secondes')",
+          "d_0": "2-5 m (voiture: 2, camion: 5)"
+        },
+        "usage": "Recommandation HUD temps réel, détection suiveur trop proche"
+      },
+      {
+        "numero": 3,
+        "nom": "Relation fondamentale du trafic",
+        "formule": "Q = k * v",
+        "variables": {
+          "Q": "Débit (véhicules/heure)",
+          "k": "Densité (véhicules/km)",
+          "v": "Vitesse moyenne spatiale (km/h)"
+        },
+        "parametres_typiques": {
+          "Q_max": "2000-2400 véh/h/voie (capacité autoroute)",
+          "k_jam": "120-180 véh/km (densité embouteillage total)",
+          "v_free": "100-130 km/h (vitesse fluide autoroute)"
+        },
+        "usage": "Calcul capacité réseau, détection transition fluide → congestion"
+      },
+      {
+        "numero": 4,
+        "nom": "Vitesse d'onde de choc (shockwave)",
+        "formule": "w = (Q₂ - Q₁) / (k₂ - k₁)",
+        "variables": {
+          "w": "Vitesse propagation onde de choc (km/h, négatif = remontée)",
+          "Q₁, Q₂": "Débits amont/aval (véh/h)",
+          "k₁, k₂": "Densités amont/aval (véh/km)"
+        },
+        "parametres_typiques": {
+          "w_typical": "-15 à -25 km/h (onde remonte trafic)",
+          "conditions": "Formation à goulot (accident, réduction voies, rampe entrée)"
+        },
+        "usage": "Prédiction propagation embouteillage, alerte HUD 'onde à 4.5 km dans 8 min'"
+      },
+      {
+        "numero": 5,
+        "nom": "Temps de trajet futur intégral",
+        "formule": "T(t₀) = ∫_path [1 / v(x, t₀ + τ(x))] dx",
+        "variables": {
+          "T(t₀)": "Temps de trajet total si départ à t₀ (min)",
+          "x": "Position le long du trajet (km)",
+          "v(x,t)": "Vitesse prédite au point x à l'instant t (km/h)",
+          "τ(x)": "Temps pour atteindre x depuis origine si départ à t₀ (min)"
+        },
+        "discretisation": "T(t₀) ≈ Σᵢ (Δxᵢ / vᵢ(t₀ + Σⱼ₌₁ⁱ⁻¹ Δtⱼ)), Δxᵢ=0.5-1 km",
+        "usage": "Calcul temps de trajet pour différents t₀, courbe T(t₀)"
+      },
+      {
+        "numero": 6,
+        "nom": "Temps de départ optimal",
+        "formule": "t₀_optimal = argmin_{t₀ ∈ [t_now, t_now + Δ_max]} T(t₀)",
+        "variables": {
+          "t₀_optimal": "Heure de départ minimisant temps de trajet",
+          "t_now": "Instant actuel",
+          "Δ_max": "Fenêtre de flexibilité départ (ex: 30 min)"
+        },
+        "algorithme": "Grid search (résolution 1-5 min) ou gradient descent si v(x,t) différentiable",
+        "contraintes": "t₀ ≥ t_now, respect heure arrivée cible t_arrival: t₀ + T(t₀) ≤ t_arrival",
+        "usage": "Recommandation principale FlowNav: 'Partez dans 11 min pour arriver 15:00 pile'"
+      },
+      {
+        "numero": 7,
+        "nom": "Incertitude vitesse prédite (variance propagation)",
+        "formule": "σ²_v(t+Δt) = α * σ²_v(t) + β * Var_obs(t)",
+        "variables": {
+          "σ²_v(t)": "Variance de la vitesse prédite à t",
+          "Δt": "Pas de temps prédiction (min)",
+          "α": "Coefficient persistance incertitude (0.85-0.95)",
+          "β": "Coefficient injection bruit observationnel (0.05-0.15)",
+          "Var_obs(t)": "Variance observée des mesures de vitesse à t"
+        },
+        "usage": "Intervalle confiance [v - 2σ_v, v + 2σ_v], affichage UI 'v=65±8 km/h prédite'"
+      },
+      {
+        "numero": 8,
+        "nom": "Modèle IDM - Intelligent Driver Model (micro)",
+        "formule": "dv/dt = a_max * [1 - (v/v₀)⁴ - (d*/d)²]",
+        "formule_distance_desiree": "d* = d_0 + v*t_h + v*Δv / (2*√(a_max*b))",
+        "variables": {
+          "dv/dt": "Accélération véhicule (m/s²)",
+          "a_max": "Accélération maximale confort (1.5-2 m/s²)",
+          "v₀": "Vitesse désirée (m/s)",
+          "v": "Vitesse actuelle (m/s)",
+          "d": "Distance au véhicule précédent (m)",
+          "d*": "Distance désirée dynamique (m)",
+          "Δv": "Différence vitesse leader-suiveur (m/s)",
+          "b": "Décélération confort (1.5-2 m/s²)"
+        },
+        "parametres_typiques": {
+          "a_max": "1.5 m/s²",
+          "b": "2.0 m/s²",
+          "v₀": "33 m/s (120 km/h autoroute)",
+          "t_h": "1.5 s",
+          "d_0": "2 m"
+        },
+        "usage": "Simulation micro-trafic pour corrections prédiction LWR, comportement individuel"
+      }
+    ],
+    "modeles_complementaires": [
+      {
+        "nom": "Modèle LWR (Lighthill-Whitham-Richards) macroscopique",
+        "equation_continuite": "∂k/∂t + ∂Q/∂x = 0",
+        "equation_etat": "Q(k) = k * V(k), V(k) = v_free * (1 - k/k_jam)",
+        "usage": "Prédiction évolution densité/vitesse réseau entier, scalable 1000s de segments"
+      },
+      {
+        "nom": "Greenshields model (relation vitesse-densité)",
+        "formule": "v = v_free * (1 - k/k_jam)",
+        "usage": "Approximation simple pour calibration initiale"
+      },
+      {
+        "nom": "BPR (Bureau of Public Roads) fonction temps de trajet",
+        "formule": "T = T_free * [1 + 0.15 * (Q/C)⁴]",
+        "usage": "Estimation rapide pénalité congestion par segment"
+      }
+    ]
+  },
+
+  "algorithmes_pseudo_code": {
+    "calcul_temps_trajet": {
+      "nom": "Compute_Travel_Time_T(t0, route, speed_predictions)",
+      "entrees": [
+        "t0: datetime - heure de départ",
+        "route: List[segment_id] - itinéraire segmenté",
+        "speed_predictions: Dict[segment_id, Dict[datetime, speed_forecast]] - prédictions v(x,t)"
+      ],
+      "sortie": "T: float - temps de trajet total (minutes)",
+      "pseudo_code": [
+        "T_total = 0",
+        "t_current = t0",
+        "FOR EACH segment IN route:",
+        "    segment_length = get_segment_length(segment)  // km",
+        "    // Prédiction vitesse au moment où on atteint ce segment",
+        "    v_predicted = speed_predictions[segment][t_current]  // km/h",
+        "    IF v_predicted < v_min_threshold (ex: 5 km/h):",
+        "        v_predicted = v_min_threshold  // éviter division par zéro",
+        "    segment_time = segment_length / v_predicted * 60  // minutes",
+        "    T_total += segment_time",
+        "    t_current += timedelta(minutes=segment_time)",
+        "RETURN T_total"
+      ],
+      "complexite": "O(n) avec n = nombre de segments (typiquement 10-100)"
+    },
+    "optimisation_t0": {
+      "nom": "Find_Optimal_Departure_Time(route, t_now, t_arrival_target, delta_max)",
+      "entrees": [
+        "route: List[segment_id]",
+        "t_now: datetime - instant actuel",
+        "t_arrival_target: datetime - heure arrivée souhaitée",
+        "delta_max: int - fenêtre flexibilité départ (minutes, ex: 30)"
+      ],
+      "sortie": "t0_optimal: datetime, T_min: float, gain_minutes: float",
+      "pseudo_code": [
+        "speed_predictions = fetch_predictions_from_API(route, t_now, delta_max)",
+        "T_min = INFINITY",
+        "t0_optimal = t_now",
+        "// Grid search avec résolution 1-5 minutes",
+        "FOR t0_candidate IN range(t_now, t_now + delta_max, step=5min):",
+        "    T_candidate = Compute_Travel_Time_T(t0_candidate, route, speed_predictions)",
+        "    // Vérifier contrainte arrivée",
+        "    IF t0_candidate + T_candidate <= t_arrival_target:",
+        "        IF T_candidate < T_min:",
+        "            T_min = T_candidate",
+        "            t0_optimal = t0_candidate",
+        "T_immediate = Compute_Travel_Time_T(t_now, route, speed_predictions)",
+        "gain_minutes = T_immediate - T_min",
+        "RETURN t0_optimal, T_min, gain_minutes"
+      ],
+      "optimisations": [
+        "Cache prédictions pour éviter requêtes répétées",
+        "Paralléliser calculs T(t0) sur multi-core",
+        "Gradient descent si prédictions lisses (dérivable)"
+      ]
+    },
+    "prediction_vitesse_LWR": {
+      "nom": "LWR_Forecast(segment_id, t_future, historical_data)",
+      "description": "Prédiction vitesse segment à t+Δ via résolution LWR discrète + corrections historiques",
+      "pseudo_code": [
+        "// Initialisation: densité actuelle k(x,t_now) depuis observations",
+        "k_current = historical_data[segment_id].latest_density",
+        "// Propagation LWR (méthode Godunov upwind scheme)",
+        "FOR t IN range(t_now, t_future, dt=1min):",
+        "    Q_in = compute_flux_upstream(segment_id, t)",
+        "    Q_out = compute_flux_downstream(segment_id, t)",
+        "    k_next = k_current + dt/dx * (Q_in - Q_out)",
+        "    k_current = k_next",
+        "// Conversion densité → vitesse (Greenshields)",
+        "v_forecast = v_free * (1 - k_current / k_jam)",
+        "// Correction historique: moyenne pondérée LWR + pattern mêmes heure/jour",
+        "v_historical_pattern = get_historical_average(segment_id, t_future.weekday, t_future.hour)",
+        "v_final = 0.6 * v_forecast + 0.4 * v_historical_pattern",
+        "RETURN v_final, confidence_score"
+      ]
+    },
+    "calibration_en_ligne": {
+      "nom": "Online_Calibration_Bayesian_Update(model_params, new_observations)",
+      "description": "Mise à jour bayésienne des paramètres modèle (v_free, k_jam, etc.) à partir d'observations temps réel",
+      "pseudo_code": [
+        "// Prior: distribution paramètres actuels (ex: v_free ~ N(μ_prior, σ²_prior))",
+        "// Likelihood: P(observations | params) via résidu quadratique",
+        "FOR EACH observation IN new_observations:",
+        "    v_observed = observation.avg_speed",
+        "    v_predicted = model.predict(observation.segment_id, observation.time)",
+        "    residual = v_observed - v_predicted",
+        "    // Update via Kalman filter ou particle filter",
+        "    IF using_Kalman:",
+        "        // Kalman update step",
+        "        K = σ²_prior / (σ²_prior + σ²_observation)",
+        "        μ_posterior = μ_prior + K * residual",
+        "        σ²_posterior = (1 - K) * σ²_prior",
+        "    ELSE IF using_ParticleFilter:",
+        "        // Resample particles selon likelihood",
+        "        weight[particle_i] = exp(-residual² / (2*σ²_obs))",
+        "        particles = resample(particles, weights)",
+        "    model_params.update(μ_posterior, σ²_posterior)",
+        "RETURN updated_model_params"
+      ],
+      "frequence": "Toutes les 5-15 minutes, batch observations récentes"
+    },
+    "idm_simulation": {
+      "nom": "IDM_Step(vehicle_state, leader_state, dt)",
+      "description": "Étape simulation micro IDM pour véhicule individuel",
+      "pseudo_code": [
+        "// État: {position, velocity, acceleration}",
+        "v = vehicle_state.velocity",
+        "d = leader_state.position - vehicle_state.position - vehicle_length",
+        "delta_v = v - leader_state.velocity",
+        "// Distance désirée dynamique",
+        "d_star = d_0 + v * t_h + v * delta_v / (2 * sqrt(a_max * b))",
+        "// Accélération IDM",
+        "a_free = a_max * (1 - (v / v_0)^4)",
+        "a_interaction = -a_max * (d_star / d)^2",
+        "a_total = a_free + a_interaction",
+        "// Intégration Euler (ou Runge-Kutta pour précision)",
+        "v_new = v + a_total * dt",
+        "v_new = clamp(v_new, 0, v_0)  // pas de vitesse négative",
+        "x_new = vehicle_state.position + v_new * dt",
+        "RETURN {position: x_new, velocity: v_new, acceleration: a_total}"
+      ]
+    }
+  },
+
+  "api_json_specification": {
+    "overview": "API RESTful + WebSocket pour échange anonymisé device ↔ cloud et broadcast prédictions",
+    "base_url": "https://api.flownav.ai/v1",
+    "authentication": "Bearer token JWT éphémère (durée 24h, refresh automatique), aucun user_id persistant",
+    "endpoints": [
+      {
+        "endpoint": "/telemetry/upload",
+        "method": "POST",
+        "description": "Upload agrégats de trafic anonymisés depuis device",
+        "rate_limit": "60 requêtes/heure par device_id_ephemeral",
+        "request_schema": {
+          "type": "object",
+          "properties": {
+            "device_id_ephemeral": {
+              "type": "string",
+              "format": "uuid",
+              "description": "ID aléatoire rotatif toutes les 10-15 min",
+              "example": "a7f3c8e2-9d4b-4f1a-8c3e-5a6b7c8d9e0f"
+            },
+            "telemetry_batch": {
+              "type": "array",
+              "maxItems": 50,
+              "items": {
+                "type": "object",
+                "properties": {
+                  "segment_id": {
+                    "type": "string",
+                    "description": "Identifiant segment haché non-réversible",
+                    "example": "seg_eu_west_a7f3c8e2"
+                  },
+                  "time_window": {
+                    "type": "object",
+                    "properties": {
+                      "start": {"type": "string", "format": "date-time", "example": "2025-11-17T14:30:00Z"},
+                      "end": {"type": "string", "format": "date-time", "example": "2025-11-17T14:35:00Z"}
+                    }
+                  },
+                  "veh_count": {"type": "integer", "minimum": 3, "description": "Nombre véhicules agrégés (k-anonymity ≥3)"},
+                  "avg_speed_kmh": {"type": "number", "minimum": 0, "maximum": 200},
+                  "std_speed_kmh": {"type": "number", "minimum": 0},
+                  "lane_count": {"type": "integer", "minimum": 1, "maximum": 6, "description": "Optionnel"},
+                  "source": {"type": "array", "items": {"enum": ["edge_device", "infrastructure", "crowd"]}, "description": "Type source données"},
+                  "confidence": {"type": "number", "minimum": 0, "maximum": 1, "description": "Score confiance 0-1"},
+                  "sent_at": {"type": "string", "format": "date-time"}
+                },
+                "required": ["segment_id", "time_window", "veh_count", "avg_speed_kmh", "source", "confidence", "sent_at"]
+              }
+            }
+          },
+          "required": ["device_id_ephemeral", "telemetry_batch"]
+        },
+        "response_example": {
+          "status": "success",
+          "accepted_count": 48,
+          "rejected_count": 2,
+          "rejected_reasons": ["segment_id invalid format", "veh_count < 3"],
+          "next_upload_after": "2025-11-17T14:37:00Z"
+        }
+      },
+      {
+        "endpoint": "/forecast/speed",
+        "method": "GET",
+        "description": "Récupération prédictions vitesse pour segments donnés",
+        "parameters": [
+          {"name": "segment_ids", "in": "query", "type": "array[string]", "required": true, "description": "Liste segment IDs (max 100)", "example": "seg_a,seg_b,seg_c"},
+          {"name": "time_start", "in": "query", "type": "string", "format": "date-time", "required": true},
+          {"name": "time_end", "in": "query", "type": "string", "format": "date-time", "required": true, "description": "Max 2h après time_start"},
+          {"name": "resolution_minutes", "in": "query", "type": "integer", "default": 5, "enum": [1, 5, 15]}
+        ],
+        "response_example": {
+          "forecasts": [
+            {
+              "segment_id": "seg_eu_west_a7f3c8e2",
+              "predictions": [
+                {
+                  "time": "2025-11-17T15:00:00Z",
+                  "speed_kmh": 65.3,
+                  "speed_std_kmh": 8.2,
+                  "confidence": 0.87,
+                  "traffic_state": "moderate"
+                },
+                {
+                  "time": "2025-11-17T15:05:00Z",
+                  "speed_kmh": 58.1,
+                  "speed_std_kmh": 12.5,
+                  "confidence": 0.81,
+                  "traffic_state": "congested"
+                }
+              ]
+            }
+          ],
+          "model_version": "lwr_lstm_v2.3.1",
+          "generated_at": "2025-11-17T14:55:32Z"
+        }
+      },
+      {
+        "endpoint": "/route/optimize_departure",
+        "method": "POST",
+        "description": "Calcul t₀ optimal pour itinéraire donné",
+        "request_schema": {
+          "origin_lat": 48.8566,
+          "origin_lon": 2.3522,
+          "dest_lat": 48.8606,
+          "dest_lon": 2.3376,
+          "arrival_target": "2025-11-17T16:00:00Z",
+          "flexibility_minutes": 30,
+          "preferences": {
+            "avoid_tolls": false,
+            "avoid_highways": false,
+            "optimize_for": "time"
+          }
+        },
+        "response_example": {
+          "optimal_departure": {
+            "t0": "2025-11-17T15:11:00Z",
+            "travel_time_minutes": 42.3,
+            "arrival_time": "2025-11-17T15:53:18Z",
+            "gain_vs_immediate_minutes": 15.7,
+            "confidence": 0.83
+          },
+          "route": {
+            "segments": ["seg_001", "seg_002", "seg_015"],
+            "total_distance_km": 28.5
+          },
+          "recommendation": "Départ dans 11 minutes recommandé. Onde de congestion prévue sur A1 à 15:20 — gain estimé 16 min.",
+          "alternative_t0": [
+            {"t0": "2025-11-17T15:05:00Z", "travel_time_minutes": 48.1},
+            {"t0": "2025-11-17T15:20:00Z", "travel_time_minutes": 55.3}
+          ]
+        }
+      },
+      {
+        "endpoint": "/ws/realtime",
+        "protocol": "WebSocket",
+        "description": "Stream temps réel pour HUD/AR — mises à jour vitesse prédite segments route active",
+        "message_format_subscribe": {
+          "action": "subscribe",
+          "route_id": "route_abc123",
+          "segment_ids": ["seg_001", "seg_002"]
+        },
+        "message_format_update": {
+          "type": "speed_update",
+          "segment_id": "seg_001",
+          "time": "2025-11-17T15:01:35Z",
+          "speed_kmh": 63.5,
+          "speed_std_kmh": 9.1,
+          "traffic_state": "moderate",
+          "alerts": [
+            {
+              "type": "shockwave_detected",
+              "distance_km": 4.5,
+              "eta_minutes": 8,
+              "severity": "medium",
+              "message": "Onde de congestion à 4.5 km, réduction vitesse recommandée"
+            }
+          ]
+        }
+      }
+    ],
+    "format_message_hud_ar": {
+      "description": "Messages textuels + overlay AR pour HUD temps réel",
+      "exemples": [
+        {
+          "contexte": "Recommandation départ optimal",
+          "texte": "Recommande : pars dans 11 min. Onde de congestion prévue à 4.5 km — gain estimé 15 min.",
+          "ar_overlay": {"icon": "clock_alert", "color": "orange", "position": "top_center"}
+        },
+        {
+          "contexte": "Alerte distance sécurité",
+          "texte": "Distance de sécurité insuffisante : augmentez à 45 m (2.0s @ 80 km/h).",
+          "ar_overlay": {"icon": "warning_distance", "color": "red", "target_vehicle": "front", "distance_line": true}
+        },
+        {
+          "contexte": "Prédiction vitesse segment suivant",
+          "texte": "Segment A13 dans 2 km : ralentissement prévu à 45±10 km/h dans 5 min.",
+          "ar_overlay": {"icon": "slow_ahead", "color": "yellow", "distance_marker": "2.0 km"}
+        },
+        {
+          "contexte": "Confirmation départ",
+          "texte": "Départ optimal maintenant. Arrivée prévue 15:53 (confiance 83%).",
+          "vocal": "C'est le moment idéal pour partir. Arrivée prévue quinze heures cinquante-trois."
+        }
+      ]
+    }
+  },
+
+  "ux_vocal_ui": {
+    "vocal_phrases_types": [
+      {
+        "situation": "Demande itinéraire + optimisation",
+        "utilisateur": "FlowNav, emmène-moi au bureau pour 9h",
+        "assistant": "Itinéraire calculé : 18.5 km, 28 minutes si départ immédiat. Recommandation : partez dans 7 minutes pour arriver à 9h pile en 22 minutes — gain 6 minutes et évitement embouteillage Avenue Foch."
+      },
+      {
+        "situation": "Alerte temps réel congestion",
+        "assistant": "Attention : onde de ralentissement détectée à 3 kilomètres. Vitesse prévue 35 km/h dans 5 minutes. Itinéraire alternatif disponible, gain 4 minutes ?"
+      },
+      {
+        "situation": "Confirmation manœuvre AR",
+        "utilisateur": "Accepte itinéraire alternatif",
+        "assistant": "Déviation activée. Suivez les flèches bleues sur votre pare-brise. Prochaine sortie dans 800 mètres."
+      },
+      {
+        "situation": "Distance sécurité",
+        "assistant": "Distance de sécurité critique : véhicule précédent trop proche. Réduisez à 70 km/h ou augmentez distance à 40 mètres."
+      },
+      {
+        "situation": "Fin trajet privacy",
+        "assistant": "Arrivée destination. Vos données de trajet ont été anonymisées et agrégées. Aucune position personnelle conservée. Merci de contribuer à FlowNav."
+      }
+    ],
+    "ui_tableau_bord": {
+      "ecran_principal": {
+        "zones": [
+          "Zone 1 (haut) : Carte 2D/3D route + véhicules proches (anonymes, pas d'ID)",
+          "Zone 2 (centre) : Vitesse actuelle, vitesse recommandée, distance sécurité",
+          "Zone 3 (bas) : Timeline t₀ optimal — graphe T(t₀) avec marqueur départ recommandé",
+          "Zone 4 (droite) : Alertes temps réel (ondes choc, accidents, météo)"
+        ],
+        "graphe_t0": {
+          "axe_x": "Heure départ possible (t_now → t_now+30min)",
+          "axe_y": "Temps trajet (minutes)",
+          "courbe": "T(t₀) avec minimum marqué",
+          "interaction": "Tap sur courbe → simulation 'Si je pars à 15h05, arrivée 15h52'"
+        }
+      },
+      "hud_projection": {
+        "elements": [
+          "Ligne horizon augmentée : vitesse recommandée superposée route",
+          "Indicateurs distance véhicule précédent : barres colorées vert/orange/rouge",
+          "Flèches directionnelles changement voie",
+          "Marqueurs distance 'onde congestion dans 4.5 km'"
+        ],
+        "latence_max": "50 ms (refresh 20 Hz pour confort visuel)"
+      }
+    },
+    "ui_mobile": {
+      "ecran_pre_depart": {
+        "elements": [
+          "Carte itinéraire avec segments colorés (vert=fluide, orange=modéré, rouge=congestion)",
+          "Card principale : 'Partez dans 11 min' avec compte à rebours",
+          "Bouton 'Démarrer maintenant' vs 'Attendre départ optimal'",
+          "Graphique T(t₀) simplifié (miniature interactive)"
+        ]
+      },
+      "ecran_navigation": {
+        "elements": [
+          "Carte plein écran + barre instructions vocales",
+          "Overlay vitesse prédite segments suivants (3 prochains)",
+          "Notifications push alertes temps réel"
+        ]
+      }
+    },
+    "ui_ar_glasses": {
+      "overlay_minimal": {
+        "principe": "Affichage minimal non-intrusif dans champ vision périphérique",
+        "elements": [
+          "Flèche directionnelle holographique 3D (prochaine sortie)",
+          "Vitesse actuelle + recommandée (coin supérieur droit)",
+          "Distance sécurité : ligne virtuelle sur route 40m devant",
+          "Alertes : icônes semi-transparents (warning à 4.5 km)"
+        ],
+        "contraintes": [
+          "Luminosité auto-ajustée (jour/nuit)",
+          "Parallaxe compensée (tracking head movement)",
+          "Pas de texte >5 mots simultanés (surcharge cognitive)"
+        ]
+      }
+    },
+    "ui_smartwatch": {
+      "fonctions": [
+        "Notification vibration : 'Départ optimal dans 5 min'",
+        "Écran simple : ETA, temps restant, vitesse moyenne",
+        "Tap → vocal brief : 'Encore 12 minutes, trafic fluide'"
+      ]
+    },
+    "contraintes_affichage": {
+      "dashboard": {
+        "resolution_min": "1280x720 px",
+        "taille_police_min": "18 pt (lisibilité à 1m)",
+        "contrast_ratio": "≥4.5:1 (WCAG AA)",
+        "update_rate": "5-10 Hz carte, 1 Hz prédictions"
+      },
+      "mobile": {
+        "responsive": "iOS 375x667 → Android tablets 1920x1200",
+        "dark_mode": "Obligatoire (conduite nuit)",
+        "one_hand_reachable": "Actions principales <350 px hauteur"
+      },
+      "ar": {
+        "fov": "Field of view 40-50° (HoloLens, Magic Leap)",
+        "depth_layers": "3 couches max (route, véhicules, UI)",
+        "occlusion": "Semi-transparent 60-80% (voir route réelle)"
+      }
+    }
+  },
+
+  "strategies_confidentialite_rgpd": {
+    "techniques_anonymisation": [
+      {
+        "technique": "Agrégation spatiotemporelle obligatoire",
+        "implementation": "Aucune position GPS brute transmise. Résolution minimale 200m × 60s. k-anonymity k≥3.",
+        "garantie": "Impossibilité reconstruction trajectoire individuelle (Shannon entropy >4 bits/segment)"
+      },
+      {
+        "technique": "Identifiants éphémères rotatifs",
+        "implementation": "device_id_ephemeral = UUID v4 aléatoire, changement toutes les 10-15 min (aléatoire pour éviter synchronisation prédictible)",
+        "garantie": "Pas de chaînage inter-fenêtres, pas de profil utilisateur long-terme"
+      },
+      {
+        "technique": "Hachage segments non-réversible",
+        "implementation": "segment_id = HMAC-SHA256(geohash_bin, secret_local_rotating). Secret renouvelé quotidiennement.",
+        "garantie": "Serveur ne peut déduire position géographique exacte sans rainbow table (infaisable avec secret rotating)"
+      },
+      {
+        "technique": "Suppression métadonnées identifiantes",
+        "implementation": "JAMAIS transmis : user_id, device IMEI/MAC, marque/modèle véhicule, plaque, cookies tiers",
+        "garantie": "Conformité minimisation données RGPD Article 5(1)(c)"
+      },
+      {
+        "technique": "Traitement local edge-first",
+        "implementation": "95% calculs sur device (prédiction, routing, UI). Cloud uniquement pour agrégation et entraînement FL.",
+        "garantie": "Données sensibles (trajets complets) restent locales, chiffrées AES-256, auto-destruction 7 jours"
+      },
+      {
+        "technique": "Federated Learning (FL)",
+        "implementation": "Entraînement modèle distribué : devices calculent gradients locaux → agrégation sécurisée (Secure Aggregation Protocol) → serveur ne voit JAMAIS données individuelles",
+        "garantie": "Privacy préservée même en cas de compromission serveur (ne possède aucune donnée brute)"
+      },
+      {
+        "technique": "Differential Privacy (phase 2)",
+        "implementation": "Ajout bruit laplacien calibré (ε=0.1, δ=10⁻⁶) sur agrégats faible densité (veh_count<10)",
+        "garantie": "Protection contre inférence statistique sur individus dans petits groupes"
+      },
+      {
+        "technique": "Minification temporelle dynamique",
+        "implementation": "Fenêtres temporelles élargies si faible densité : 1 min (dense) → 5 min (sparse) pour maintenir k≥3",
+        "garantie": "Adaptation automatique pour garantir anonymat même zones rurales"
+      },
+      {
+        "technique": "Consentement granulaire UX",
+        "implementation": "Onboarding : choix explicite 'Partager données trafic anonymisées' (toggle ON/OFF), révocable à tout instant",
+        "garantie": "Conformité RGPD Article 7 (consentement), Article 21 (droit opposition)"
+      },
+      {
+        "technique": "Data retention stricte",
+        "implementation": "Device : 7 jours max, auto-purge. Cloud agrégats : 90 jours. Modèles : 2 ans. Logs RGPD : 3 ans (obligation légale).",
+        "garantie": "Minimisation durée conservation, Article 5(1)(e)"
+      }
+    ],
+    "conformite_rgpd_justification": [
+      {
+        "principe": "1. Licéité, loyauté, transparence (Art. 5(1)(a))",
+        "justification": "Base légale : consentement explicite utilisateur (opt-in onboarding) + intérêt légitime (amélioration trafic = bénéfice collectif). Transparence : privacy policy claire 'Aucune position exacte transmise, données agrégées uniquement'. UI affiche statut partage temps réel."
+      },
+      {
+        "principe": "2. Limitation finalités (Art. 5(1)(b))",
+        "justification": "Finalité exclusive : optimisation trafic et prédiction itinéraires. Pas de revente données, pas de publicité ciblée, pas de profilage comportemental. Audits trimestriels conformité."
+      },
+      {
+        "principe": "3. Minimisation données (Art. 5(1)(c))",
+        "justification": "Collecte strictement nécessaire : {segment_id_haché, avg_speed, time_window}. Aucune donnée identifiante (nom, email, IMEI, plaques). Position brute jamais stockée >5s. k-anonymity k≥3 garanti."
+      },
+      {
+        "principe": "4. Exactitude (Art. 5(1)(d))",
+        "justification": "Agrégats validés (filtrage outliers z-score>3), détection flood. Utilisateur peut signaler erreurs prédiction → correction modèle. Pas de 'données personnelles' au sens RGPD car anonymisées irréversiblement."
+      },
+      {
+        "principe": "5. Limitation conservation (Art. 5(1)(e))",
+        "justification": "Device 7j, Cloud 90j agrégats (suffisant cycles saisonniers), modèles 2 ans (R&D), logs RGPD 3 ans (preuve consentement). Purge automatique, certificat annuel destruction."
+      },
+      {
+        "principe": "6. Intégrité, confidentialité (Art. 5(1)(f))",
+        "justification": "Chiffrement : TLS 1.3 transit, AES-256 repos. Authentification mTLS serveurs. Anonymisation irréversible (HMAC secret rotating). Audits sécurité annuels (pentest). Incident response <72h (Art. 33)."
+      },
+      {
+        "principe": "7. Droits personnes concernées (Art. 12-22)",
+        "justification": "Accès (Art. 15) : dashboard 'Mes contributions' affiche stats agrégées (impossible restituer données individuelles car n'existent pas). Effacement (Art. 17) : bouton 'Supprimer toutes mes données' → purge locale + révocation token cloud. Portabilité (Art. 20) : export JSON stats (non-applicable données anonymisées). Opposition (Art. 21) : toggle OFF partage → device continue fonctionner offline."
+      },
+      {
+        "principe": "8. Responsable traitement & DPO (Art. 24, 37)",
+        "justification": "DPO désigné (dpo@flownav.ai), DPIA (Data Protection Impact Assessment) réalisée pré-lancement, registre traitements public, co-responsabilité contractuelle avec partenaires infrastructure (cloud providers)."
+      },
+      {
+        "principe": "9. Transferts hors UE (Art. 44-50)",
+        "justification": "Données hébergées UE uniquement (AWS eu-west-1, GCP europe-west1). Si expansion US/Asie : clauses contractuelles types (SCC) + chiffrement bout-en-bout + anonymisation renforcée (ε-DP)."
+      },
+      {
+        "principe": "10. Auditabilité & certification",
+        "justification": "Logs immuables (blockchain optionnelle) actions RGPD (consentements, effacements). Certification ISO 27001 (sécurité), possibilité label CNIL 'Privacy by Design'. Publication rapport transparence annuel (nb utilisateurs, requêtes effacement, incidents)."
+      }
+    ],
+    "resume_legal_5_points": [
+      "✅ Anonymisation technique irréversible (k-anonymity, hachage, rotation ID) → données hors champ RGPD Article 4(1) car non-identifiantes",
+      "✅ Minimisation extrême : uniquement agrégats statistiques nécessaires, aucune métadonnée superflue",
+      "✅ Consentement explicite opt-in + droit révocation instantanée → base légale solide Article 6(1)(a)",
+      "✅ Privacy-by-design architecture (edge-first, FL, chiffrement) + audits réguliers → conformité Article 25",
+      "✅ Finalité légitime (intérêt public mobilité durable + bénéfice utilisateur temps gagné) + transparence totale → confiance utilisateur"
+    ]
+  },
+
+  "scenarios_usage_reels": [
+    {
+      "scenario": "1. Commute quotidien urbain — Évitement rush hour",
+      "persona": "Sophie, consultante, trajet domicile-client 22 km Paris",
+      "deroulement": [
+        "07:45 — Sophie demande FlowNav : 'RDV client 9h, Défense'. App calcule t₀ optimal.",
+        "Résultat : 'Partez dans 18 minutes (08:03) pour arriver 08:57 en 54 min. Si départ immédiat : 1h12 (embouteillage périph 08:15-08:45)'.",
+        "Sophie attend, reçoit notif 08:02 'Départ optimal maintenant'.",
+        "Trajet : FlowNav HUD affiche vitesse recommandée 70 km/h A1, alerte 'Ralentissement 2.5 km, réduction à 50 km/h'. Sophie anticipe, freine doucement.",
+        "Arrivée 08:56, gain 16 min vs départ immédiat, réduction 200g CO₂ (moins accélérations/freinages)."
+      ],
+      "metriques": {
+        "gain_temps_min": 16,
+        "reduction_co2_g": 200,
+        "stress_level": "Réduit (prédictibilité)",
+        "contribution_trafic": "Décalage départ → -1 véhicule en heure pointe → effet collectif si adoption 20%"
+      }
+    },
+    {
+      "scenario": "2. Road trip autoroute — Optimisation multi-stops",
+      "persona": "Famille Martin, Lyon → Nice 470 km, 2 arrêts prévus",
+      "deroulement": [
+        "Samedi 10:00 — Planification FlowNav : itinéraire A7 avec arrêts Montélimar (pause), Aix-en-Provence (déjeuner).",
+        "App propose : 'Départ 10:45 recommandé (évitement départ vacanciers 11h-12h), arrivée Nice 16:20 avec pauses'.",
+        "Pendant trajet : alerte 'Accident A7 km 125, onde remonte. Déviation N7 disponible, +8 min mais évite 40 min arrêt'. Famille accepte.",
+        "AR glasses papa affichent distance sécurité 120 km/h : ligne verte 60m devant (confort), alerte orange si <45m.",
+        "Arrivée Nice 16:35 (15 min retard prévu par re-routing temps réel), mais 35 min gain vs départ 10h."
+      ],
+      "metriques": {
+        "gain_temps_min": 35,
+        "reduction_co2_g": 1200,
+        "confort": "Élevé (pauses optimisées, pas d'embouteillage surprise)",
+        "securite": "Distance sécurité respectée 94% trajet (vs 67% moyenne sans assistance)"
+      }
+    },
+    {
+      "scenario": "3. Livraison urbaine pro — Flotte synchronisée",
+      "persona": "Entreprise LogiFlow, 50 camionnettes Paris intra-muros",
+      "deroulement": [
+        "Dispatcher utilise FlowNav Fleet API : 200 livraisons journée, optimisation tournées + t₀ chaque véhicule.",
+        "Algo calcule : camion #12 doit partir 13:47 (pas 13:30) pour éviter chantier Rue de Rivoli 14h-15h.",
+        "Conducteurs reçoivent notifs 'Prochain départ dans X min' + itinéraire adaptatif temps réel.",
+        "Sync montre connectée : vibration 2 min avant départ optimal.",
+        "Résultat journée : 47/50 livraisons à l'heure (vs 38/50 avant FlowNav), -12% km parcourus (re-routing intelligent), -18% temps moteur tournant (moins d'attente embouteillages)."
+      ],
+      "metriques": {
+        "gain_productivite": "+23% livraisons/heure",
+        "reduction_carburant": "18%",
+        "reduction_co2_flotte": "2.4 tonnes/mois",
+        "ROI": "Abonnement FlowNav Fleet amorti en 6 semaines"
+      }
+    }
+  ],
+
+  "kpi_metriques": [
+    {
+      "kpi": "Débit réseau routier (véh/h)",
+      "baseline_sans_flownav": "1800-2000 véh/h/voie heure pointe",
+      "objectif_avec_flownav_20%_adoption": "2100-2200 véh/h/voie (+10-15%)",
+      "mecanisme": "Lissage demande temporelle (étalement départs) + distances sécurité optimisées (moins d'ondes stop-and-go) → capacité effective augmentée",
+      "mesure": "Capteurs infrastructure (boucles inductives) + agrégats FlowNav"
+    },
+    {
+      "kpi": "Temps de trajet moyen (min)",
+      "baseline": "35 min (trajet urbain 20 km)",
+      "objectif_flownav": "28-30 min (-15 à -20%)",
+      "mecanisme": "Optimisation t₀ évite pics congestion + re-routing prédictif",
+      "mesure": "Moyenne utilisateurs FlowNav vs population générale (enquête + GPS agrégé)"
+    },
+    {
+      "kpi": "Réduction CO₂ estimée (g/trajet)",
+      "baseline": "4500 g CO₂ (20 km, 8.5 L/100km essence)",
+      "objectif_flownav": "3900-4100 g (-10 à -15%)",
+      "mecanisme": "Moins accélérations/freinages (conduite fluide assistée HUD) + trajets courts (moins détours embouteillages) + vitesse optimale (80-90 km/h vs 50 stop-and-go)",
+      "calcul": "Δ CO₂ = (L_baseline - L_flownav) × 2.31 kg CO₂/L essence",
+      "impact_scale": "1M utilisateurs × 250 trajets/an × 500g économie = 125 000 tonnes CO₂/an"
+    },
+    {
+      "kpi": "Taux adoption prédictions t₀",
+      "objectif": ">60% utilisateurs suivent recommandation départ",
+      "mesure": "Ratio (départs ±5 min t₀_optimal) / (total départs planifiés)"
+    },
+    {
+      "kpi": "Latence prédiction HUD",
+      "objectif": "<1s (99e percentile)",
+      "mesure": "Monitoring APM device-side (temps query API + render UI)"
+    },
+    {
+      "kpi": "Précision prédiction vitesse",
+      "objectif": "MAPE (Mean Absolute Percentage Error) <15% à horizon 15 min",
+      "mesure": "Comparaison v_predicted vs v_observed sur validation set",
+      "baseline_naive": "25-30% (prédiction moyenne historique simple)"
+    }
+  ],
+
+  "recommandations_implementation": [
+    {
+      "priorite": 1,
+      "titre": "Sécurité & Privacy dès la conception",
+      "actions": [
+        "Réaliser DPIA (Data Protection Impact Assessment) complète avant tout déploiement pilote",
+        "Audit sécurité externe (pentest) sur API, chiffrement, gestion secrets (rotation keys)",
+        "Implémenter rate limiting agressif (60 req/h/device) + WAF (Web Application Firewall) anti-DDoS",
+        "Mettre en place monitoring logs anomalies (SIEM) : détection tentatives ré-identification, flood fake data",
+        "Certification ISO 27001 + SOC 2 Type II dans 12 mois → preuve conformité clients B2B"
+      ],
+      "justification": "Privacy-by-design est différentiateur business ET obligation légale. Breach de données = fin du projet (perte confiance). Investir 15-20% budget R&D sécurité."
+    },
+    {
+      "priorite": 2,
+      "titre": "Tests & Validation modèles prédictifs",
+      "actions": [
+        "Phase pilote 6 mois : 2 villes (1 urbain dense type Paris, 1 périurbain type Lyon) avec 5000 beta users",
+        "A/B testing : groupe contrôle (navigation classique) vs groupe FlowNav → mesure gains temps/CO₂ réels",
+        "Simulation SUMO (Simulation of Urban MObility) : validation modèles LWR+IDM sur réseaux synthétiques avant déploiement réel",
+        "Calibration continue : update paramètres (v_free, k_jam, t_h) hebdomadaire via Bayesian inference sur nouvelles observations",
+        "Monitoring dashboards : précision prédictions par segment/heure, taux faux positifs alertes, satisfaction utilisateurs (NPS)"
+      ],
+      "justification": "Prédictions erronées → perte confiance utilisateurs → désinstallation. Validation rigoureuse = clé adoption massive. Budget 10-15% tests."
+    },
+    {
+      "priorite": 3,
+      "titre": "Déploiement progressif & Partenariats infrastructure",
+      "actions": [
+        "Rollout géographique : pilote 2 villes (M6) → extension 10 métropoles (M12) → national (M18-24)",
+        "Partenariats capteurs infrastructure : villes (boucles inductives), autoroutes (APRR, Vinci), Waze/Google Traffic (APIs)",
+        "Intégration OEM automotive : PSA, Renault, BMW (FlowNav préinstallé dashboards neufs) → go-to-market B2B2C",
+        "API publique développeurs : ouvrir /forecast/speed (rate limited) → écosystème apps tiers (ex: Citymapper intègre FlowNav)",
+        "Marketing éducatif : campagnes 'Partez au bon moment, gagnez 15 min/jour' + preuve impact CO₂ → gamification (badges éco-conduite)"
+      ],
+      "justification": "Effet réseau = critique (plus users → meilleures prédictions → plus users). Partenariats accélèrent adoption. Open API = viralité. Budget 25% marketing/partnerships."
+    }
+  ]
+}
