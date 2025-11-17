@@ -15,7 +15,9 @@
     "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
     "clean": "turbo run clean && rm -rf node_modules",
     "docker:dev": "docker-compose -f docker/docker-compose.dev.yml up",
-    "docker:prod": "docker-compose -f docker/docker-compose.yml up"
+    "docker:prod": "docker-compose -f docker/docker-compose.yml up",
+    "test:db": "ts-node scripts/test-database.ts",
+    "db:setup": "psql -h localhost -U postgres -f scripts/setup-database.sql"
   },
   "devDependencies": {
     "turbo": "^1.11.0",
