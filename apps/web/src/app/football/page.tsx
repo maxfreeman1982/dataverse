@@ -9,7 +9,8 @@ import {
   TrendingUp,
   FileText,
   Target,
-  Trophy
+  Trophy,
+  BarChart3
 } from 'lucide-react';
 
 export default function FootballDashboard() {
@@ -56,6 +57,14 @@ export default function FootballDashboard() {
 
         {/* Main Features */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <FeatureCard
+            href="/football/dashboard"
+            icon={<BarChart3 className="w-12 h-12" />}
+            title="Dashboard Analytics"
+            description="Statistiques avancées, graphiques et comparaisons"
+            color="indigo"
+          />
+
           <FeatureCard
             href="/football/teams"
             icon={<Users className="w-12 h-12" />}
