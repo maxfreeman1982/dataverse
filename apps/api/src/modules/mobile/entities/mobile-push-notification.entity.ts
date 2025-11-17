@@ -112,11 +112,11 @@ export class MobilePushNotification {
 
   // Scheduling
   @Field({ nullable: true })
-  @Column({ type: 'datetime', nullable: true, name: 'scheduled_at' })
+  @Column({ type: 'timestamp', nullable: true, name: 'scheduled_at' })
   scheduledAt?: Date;
 
   @Field({ nullable: true })
-  @Column({ type: 'datetime', nullable: true, name: 'sent_at' })
+  @Column({ type: 'timestamp', nullable: true, name: 'sent_at' })
   sentAt?: Date;
 
   // Statistics

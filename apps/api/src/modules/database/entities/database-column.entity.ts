@@ -8,6 +8,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { ObjectType, Field, ID, registerEnumType } from '@nestjs/graphql';
+import GraphQLJSON from 'graphql-type-json';
 import { DatabaseTable } from './database-table.entity';
 
 export enum ColumnType {
@@ -78,7 +79,7 @@ export class DatabaseColumn {
   @Column({ type: 'text', nullable: true })
   defaultValue: string;
 
-  @Field()
+  @Field(() => GraphQLJSON)
   @Column({ type: 'simple-json', default: {} })
   options: Record<string, any>;
 

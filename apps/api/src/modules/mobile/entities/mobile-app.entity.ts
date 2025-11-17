@@ -188,6 +188,6 @@ export class MobileApp {
   updatedAt: Date;
 
   @Field({ nullable: true })
-  @Column({ type: 'datetime', nullable: true, name: 'published_at' })
+  @Column({ type: 'timestamp', nullable: true, name: 'published_at' })
   publishedAt?: Date;
 }

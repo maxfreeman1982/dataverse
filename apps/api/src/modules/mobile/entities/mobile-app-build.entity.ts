@@ -151,14 +151,14 @@ export class MobileAppBuild {
   updatedAt: Date;
 
   @Field({ nullable: true })
-  @Column({ type: 'datetime', nullable: true, name: 'started_at' })
+  @Column({ type: 'timestamp', nullable: true, name: 'started_at' })
   startedAt?: Date;
 
   @Field({ nullable: true })
-  @Column({ type: 'datetime', nullable: true, name: 'completed_at' })
+  @Column({ type: 'timestamp', nullable: true, name: 'completed_at' })
   completedAt?: Date;
 
   @Field({ nullable: true })
-  @Column({ type: 'datetime', nullable: true, name: 'published_at' })
+  @Column({ type: 'timestamp', nullable: true, name: 'published_at' })
   publishedAt?: Date;
 }

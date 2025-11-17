@@ -9,6 +9,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { ObjectType, Field, ID } from '@nestjs/graphql';
+import GraphQLJSON from 'graphql-type-json';
 import { DatabaseColumn } from './database-column.entity';
 import { User } from '../../users/user.entity';
 
@@ -62,7 +63,7 @@ export class DatabaseTable {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Field()
+  @Field(() => GraphQLJSON)
   @Column({ type: 'simple-json', default: {} })
   metadata: Record<string, any>;
 }

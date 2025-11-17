@@ -42,7 +42,7 @@ export class User {
   isVerified: boolean;
 
   @Field({ nullable: true })
-  @Column({ type: 'datetime', nullable: true, name: 'last_login_at' })
+  @Column({ type: 'timestamp', nullable: true, name: 'last_login_at' })
   lastLoginAt?: Date;
 
   @Field()

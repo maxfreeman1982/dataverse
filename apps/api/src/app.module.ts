@@ -30,14 +30,17 @@ import { PerfumeModule } from './modules/perfume/perfume.module';
       envFilePath: ['.env.local', '.env'],
     }),
 
-    // TypeORM - SQLite (Development/Testing)
-    // Pour PostgreSQL production, voir DATABASE_SETUP_GUIDE.md
+    // TypeORM - PostgreSQL
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
-        type: 'sqlite',
-        database: 'perfume-architect-pro.db',
+        type: 'postgres',
+        host: configService.get('DB_HOST', 'localhost'),
+        port: configService.get('DB_PORT', 5432),
+        username: configService.get('DB_USERNAME', 'dataverse'),
+        password: configService.get('DB_PASSWORD', 'dataverse'),
+        database: configService.get('DB_NAME', 'dataverse'),
         entities: [join(__dirname, '**', '*.entity.{ts,js}')],
         synchronize: true,
         logging: configService.get('NODE_ENV') === 'development',
