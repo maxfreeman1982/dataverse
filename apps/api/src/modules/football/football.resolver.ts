@@ -1,8 +1,8 @@
 import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
 import { UseGuards } from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import { User } from '../users/entities/user.entity';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { User } from '../users/user.entity';
 import {
   Team,
   Player,
@@ -24,6 +24,7 @@ import {
 import { FootballService } from './services/football.service';
 import { FootballAiService } from './services/football-ai.service';
 import { TrainingGeneratorService } from './services/training-generator.service';
+import { FootballSeedService } from '../../database/seeds/football-seed.service';
 
 @Resolver()
 @UseGuards(JwtAuthGuard)
@@ -32,6 +33,7 @@ export class FootballResolver {
     private footballService: FootballService,
     private footballAiService: FootballAiService,
     private trainingGenerator: TrainingGeneratorService,
+    private footballSeedService: FootballSeedService,
   ) {}
 
   // ================== TEAMS ==================
@@ -319,5 +321,13 @@ export class FootballResolver {
     @Args('id', { type: () => ID }) id: string,
   ): Promise<SetPiece> {
     return this.footballService.getSetPiece(user.id, id);
+  }
+
+  // ================== SEED DATA ==================
+
+  @Mutation(() => String)
+  async seedFootballData(@CurrentUser() user: User): Promise<string> {
+    const result = await this.footballSeedService.seed(user.id);
+    return JSON.stringify(result, null, 2);
   }
 }

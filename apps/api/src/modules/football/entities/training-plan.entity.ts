@@ -8,7 +8,7 @@ import {
   ManyToOne,
   JoinColumn,
 } from 'typeorm';
-import { User } from '../../users/entities/user.entity';
+import { User } from '../../users/user.entity';
 import { Team } from './team.entity';
 
 @ObjectType()
@@ -67,7 +67,7 @@ export class TrainingPlan {
     intensity: string; // low, medium, high
     description: string;
     setup?: string;
-    coaching points?: Array<string>;
+    coachingPoints?: Array<string>;
     variations?: Array<string>;
     equipment?: Array<string>;
     playersCount?: number;

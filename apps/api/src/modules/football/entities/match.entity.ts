@@ -9,7 +9,7 @@ import {
   OneToMany,
   JoinColumn,
 } from 'typeorm';
-import { User } from '../../users/entities/user.entity';
+import { User } from '../../users/user.entity';
 import { Team } from './team.entity';
 import { TrackingData } from './tracking-data.entity';
 import { MatchEvent } from './match-event.entity';

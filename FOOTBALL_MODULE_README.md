@@ -4,6 +4,31 @@
 
 **FootMind Engine** est une application complète d'analyse football basée sur l'IA, intégrée dans la plateforme Dataverse. Elle combine analyse tactique avancée, prédiction en temps réel, génération d'entraînements et innovations cross-sport.
 
+## 🌱 Quick Start - Data Seeding
+
+Pour tester rapidement FootMind Engine avec des données d'exemple :
+
+```graphql
+mutation {
+  seedFootballData
+}
+```
+
+Cette mutation va créer :
+- **4 équipes** : FC Barcelona, Real Madrid, Manchester City, Bayern München
+- **30+ joueurs** avec attributs complets et statistiques
+- **12 matchs** : 10 terminés avec stats complètes, 2 à venir
+- **Événements de match** : 100+ events (passes, tirs, tackles, etc.)
+- **Données de tracking** : Positions de joueurs et ballon sur 200 frames
+- **8 analyses tactiques complètes** générées par IA
+- **Patterns tactiques** : 10+ patterns détectés (offensifs, défensifs, transitions)
+- **Prédictions** : 15+ micro-prédictions et prédictions de séquences
+- **2 plans d'entraînement** : Avec exercices détaillés et objectifs
+- **2 phases arrêtées** : Corners et coups francs
+- **5 rapports de match** complets
+
+La mutation retourne un JSON avec le nombre de chaque type d'entité créée.
+
 ## 🎯 Fonctionnalités Principales
 
 ### 1. Analyse Tactique Avancée

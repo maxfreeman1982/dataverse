@@ -19,7 +19,9 @@ import {
   FootballAiService,
   TrainingGeneratorService,
 } from './services';
-import { AiModule } from '../ai/ai.module';
+import { AIModule } from '../ai/ai.module';
+import { FootballSeedService } from '../../database/seeds/football-seed.service';
+import { User } from '../users/user.entity';
 
 @Module({
   imports: [
@@ -35,15 +37,17 @@ import { AiModule } from '../ai/ai.module';
       TrainingPlan,
       SetPiece,
       MatchReport,
+      User,
     ]),
-    AiModule, // Import AI module for LLM integration
+    AIModule, // Import AI module for LLM integration
   ],
   providers: [
     FootballResolver,
     FootballService,
     FootballAiService,
     TrainingGeneratorService,
+    FootballSeedService,
   ],
-  exports: [FootballService, FootballAiService, TrainingGeneratorService],
+  exports: [FootballService, FootballAiService, TrainingGeneratorService, FootballSeedService],
 })
 export class FootballModule {}

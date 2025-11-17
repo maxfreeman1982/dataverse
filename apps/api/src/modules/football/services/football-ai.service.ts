@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AiService } from '../../ai/ai.service';
+import { AIService } from '../../ai/ai.service';
 import { Match, TacticalAnalysis, MatchReport } from '../entities';
 import { AnalysisPhase, AnalysisFocus } from '../dto';
 
@@ -62,7 +62,7 @@ Contraintes :
     private analysisRepository: Repository<TacticalAnalysis>,
     @InjectRepository(MatchReport)
     private reportRepository: Repository<MatchReport>,
-    private aiService: AiService,
+    private aiService: AIService,
   ) {}
 
   /**
@@ -110,44 +110,38 @@ Contraintes :
     const prompt = this.buildAnalysisPrompt(context, options);
 
     // Call AI service with master prompt
-    const aiResponse = await this.aiService.chat(
-      userId,
-      null, // no conversation ID - one-shot analysis
-      prompt,
-      {
-        systemPrompt: this.MASTER_PROMPT,
-        temperature: 0.7,
-        maxTokens: 4000,
-      },
-    );
+    // Note: Using simplified chat interface for now
+    const fullPrompt = `${this.MASTER_PROMPT}\n\n${prompt}`;
+    const aiResponse = await this.aiService.chat(fullPrompt, userId);
 
     // Parse AI response and structure data
-    const parsedAnalysis = this.parseAIResponse(aiResponse.content);
+    const parsedAnalysis = this.parseAIResponse(aiResponse.answer);
 
     // Create tactical analysis entity
-    const analysis = this.analysisRepository.create({
+    const analysisEntity = this.analysisRepository.create({
       matchId: match.id,
       analysisType: options.phase,
       timestamp: options.phase === AnalysisPhase.LIVE ? Date.now() / 1000 : null,
       ...parsedAnalysis.tacticalData,
     });
 
-    await this.analysisRepository.save(analysis);
+    const saveResult = await this.analysisRepository.save(analysisEntity);
+    const savedAnalysis = Array.isArray(saveResult) ? saveResult[0] : saveResult;
 
     // Generate full report if requested
     let report: MatchReport | undefined;
     if (options.generateFullReport) {
       report = await this.generateMatchReport(
         match,
-        analysis,
-        aiResponse.content,
+        savedAnalysis,
+        aiResponse.answer,
         parsedAnalysis,
       );
     }
 
     this.logger.log(`Analysis complete for match ${matchId}`);
 
-    return { analysis, report };
+    return { analysis: savedAnalysis, report };
   }
 
   /**
@@ -408,15 +402,12 @@ Fournis:
 Sois précis, chiffré et rapide.
 `;
 
-    const aiResponse = await this.aiService.chat(userId, null, prompt, {
-      systemPrompt: this.MASTER_PROMPT,
-      temperature: 0.5,
-      maxTokens: 1000,
-    });
+    const fullPrompt = `${this.MASTER_PROMPT}\n\n${prompt}`;
+    const aiResponse = await this.aiService.chat(fullPrompt, userId);
 
     return {
       timestamp: currentTimestamp,
-      predictions: aiResponse.content,
+      predictions: aiResponse.answer,
     };
   }
 }
