@@ -16,9 +16,10 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { FlaskConical, Plus, X, AlertTriangle, CheckCircle, ChevronLeft, Shield, ShieldAlert } from 'lucide-react';
+import { FlaskConical, Plus, X, AlertTriangle, CheckCircle, ChevronLeft, Shield, ShieldAlert, DollarSign, TrendingUp } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { generateComplianceReport, getComplianceStatus, getComplianceColor, type FormulaIngredientInput } from '@/lib/compliance';
+import { calculateFormulaCost, suggestRetailPrice, getPricingTier, calculateCostByNoteLevel } from '@/lib/pricing';
 
 interface FormulaIngredient {
   ingredient: Ingredient;
@@ -47,6 +48,12 @@ export default function CreateFormulaPage() {
   // Generate compliance report
   const complianceReport = generateComplianceReport(selectedIngredients as FormulaIngredientInput[]);
   const complianceStatus = getComplianceStatus(complianceReport);
+
+  // Calculate costs (for 100ml batch)
+  const formulaCost = calculateFormulaCost(selectedIngredients, 100);
+  const suggestedPrice = suggestRetailPrice(formulaCost);
+  const pricingTier = getPricingTier(formulaCost.costPerMl);
+  const costByLevel = calculateCostByNoteLevel(formulaCost, selectedIngredients);
 
   const isValid = totalPercentage === 100 && name.trim() !== '' && selectedIngredients.length > 0 && complianceReport.isFullyCompliant;
 
@@ -338,6 +345,103 @@ export default function CreateFormulaPage() {
               )}
             </CardContent>
           </Card>
+
+          {/* Cost Analysis */}
+          {selectedIngredients.length > 0 && (
+            <Card className="border-2 border-emerald-500/50">
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <DollarSign className="h-5 w-5 text-emerald-600" />
+                    <CardTitle>Cost Analysis</CardTitle>
+                  </div>
+                  <Badge className={pricingTier.color} variant="outline">
+                    {pricingTier.tier}
+                  </Badge>
+                </div>
+                <CardDescription>
+                  Pricing for 100ml batch
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {/* Total Cost */}
+                <div className="p-4 bg-emerald-50 rounded-lg border border-emerald-200">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm text-muted-foreground">Total Cost</span>
+                    <span className="text-2xl font-bold text-emerald-600">
+                      €{formulaCost.totalCost.toFixed(2)}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs text-muted-foreground">
+                    <span>Cost per ml</span>
+                    <span className="font-semibold">€{formulaCost.costPerMl.toFixed(3)}/ml</span>
+                  </div>
+                </div>
+
+                {/* Cost by Note Level */}
+                <div className="space-y-2 pt-2 border-t">
+                  <Label className="text-xs font-semibold uppercase text-muted-foreground">
+                    Cost by Note Level
+                  </Label>
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between text-sm p-2 bg-blue-50 rounded">
+                      <span className="text-blue-700">Top Notes</span>
+                      <span className="font-semibold">€{costByLevel.topNotesCost.toFixed(2)}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm p-2 bg-purple-50 rounded">
+                      <span className="text-purple-700">Heart Notes</span>
+                      <span className="font-semibold">€{costByLevel.heartNotesCost.toFixed(2)}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-sm p-2 bg-amber-50 rounded">
+                      <span className="text-amber-700">Base Notes</span>
+                      <span className="font-semibold">€{costByLevel.baseNotesCost.toFixed(2)}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Suggested Retail Price */}
+                <div className="pt-2 border-t">
+                  <div className="flex items-center gap-2 mb-2">
+                    <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                    <Label className="text-xs font-semibold uppercase text-muted-foreground">
+                      Pricing Suggestion
+                    </Label>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-muted-foreground">Suggested Retail (7x markup)</span>
+                    <span className="text-lg font-bold text-purple-600">
+                      €{suggestedPrice.toFixed(2)}
+                    </span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Profit margin: €{(suggestedPrice - formulaCost.totalCost - 10).toFixed(2)}
+                  </p>
+                </div>
+
+                {/* Most Expensive Ingredients */}
+                {formulaCost.ingredients.length > 0 && (
+                  <div className="pt-2 border-t">
+                    <Label className="text-xs font-semibold uppercase text-muted-foreground mb-2 block">
+                      Top 3 Most Expensive
+                    </Label>
+                    <div className="space-y-1">
+                      {formulaCost.ingredients
+                        .sort((a, b) => b.totalCost - a.totalCost)
+                        .slice(0, 3)
+                        .map((item) => (
+                          <div key={item.ingredientId} className="flex items-center justify-between text-xs">
+                            <span className="text-muted-foreground truncate flex-1">
+                              {item.ingredientName}
+                            </span>
+                            <span className="font-semibold ml-2">€{item.totalCost.toFixed(2)}</span>
+                          </div>
+                        ))}
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          )}
         </div>
 
         {/* Middle Column - Olfactive Pyramid */}
