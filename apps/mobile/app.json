@@ -1,0 +1,51 @@
+{
+  "expo": {
+    "name": "OJ Investment",
+    "slug": "oj-investment",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./src/assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "splash": {
+      "image": "./src/assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0066CC"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.ojinvestment.app",
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "We use Face ID to secure your account",
+        "NSCameraUsageDescription": "We need camera access for KYC verification"
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./src/assets/adaptive-icon.png",
+        "backgroundColor": "#0066CC"
+      },
+      "package": "com.ojinvestment.app",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.USE_BIOMETRIC",
+        "android.permission.USE_FINGERPRINT"
+      ]
+    },
+    "web": {
+      "favicon": "./src/assets/favicon.png"
+    },
+    "plugins": [
+      "expo-secure-store",
+      "expo-local-authentication",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow OJ Investment to access your camera for KYC verification"
+        }
+      ]
+    ]
+  }
+}
