@@ -18,6 +18,11 @@ import { ProjectService } from './services/project.service';
 import { InvestmentService } from './services/investment.service';
 import { KycService } from './services/kyc.service';
 import { BlockchainService } from './services/blockchain.service';
+import { AdminService } from './services/admin.service';
+import { BankService } from './services/bank.service';
+import { CertificateService } from './services/certificate.service';
+import { KycProviderService } from './services/kyc-provider.service';
+import { OjNotificationGateway } from './services/notification.service';
 
 // Resolvers
 import { InvestorResolver } from './resolvers/investor.resolver';
@@ -25,6 +30,8 @@ import { WalletResolver } from './resolvers/wallet.resolver';
 import { ProjectResolver } from './resolvers/project.resolver';
 import { InvestmentResolver } from './resolvers/investment.resolver';
 import { KycResolver } from './resolvers/kyc.resolver';
+import { AdminResolver } from './resolvers/admin.resolver';
+import { BankResolver } from './resolvers/bank.resolver';
 
 // Guards
 import { OjAuthGuard } from './guards/oj-auth.guard';
@@ -59,12 +66,20 @@ import { OjAdminGuard } from './guards/oj-admin.guard';
     InvestmentService,
     KycService,
     BlockchainService,
+    AdminService,
+    BankService,
+    CertificateService,
+    KycProviderService,
+    // WebSocket Gateway
+    OjNotificationGateway,
     // Resolvers
     InvestorResolver,
     WalletResolver,
     ProjectResolver,
     InvestmentResolver,
     KycResolver,
+    AdminResolver,
+    BankResolver,
     // Guards
     OjAuthGuard,
     OjAdminGuard,
@@ -76,6 +91,11 @@ import { OjAdminGuard } from './guards/oj-admin.guard';
     InvestmentService,
     KycService,
     BlockchainService,
+    AdminService,
+    BankService,
+    CertificateService,
+    KycProviderService,
+    OjNotificationGateway,
   ],
 })
 export class OjModule {}
