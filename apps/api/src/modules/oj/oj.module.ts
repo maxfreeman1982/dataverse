@@ -23,6 +23,8 @@ import { BankService } from './services/bank.service';
 import { CertificateService } from './services/certificate.service';
 import { KycProviderService } from './services/kyc-provider.service';
 import { OjNotificationGateway } from './services/notification.service';
+import { SpvService } from './services/spv.service';
+import { PublicService } from './services/public.service';
 
 // Resolvers
 import { InvestorResolver } from './resolvers/investor.resolver';
@@ -32,6 +34,8 @@ import { InvestmentResolver } from './resolvers/investment.resolver';
 import { KycResolver } from './resolvers/kyc.resolver';
 import { AdminResolver } from './resolvers/admin.resolver';
 import { BankResolver } from './resolvers/bank.resolver';
+import { SpvResolver } from './resolvers/spv.resolver';
+import { PublicResolver } from './resolvers/public.resolver';
 
 // Guards
 import { OjAuthGuard } from './guards/oj-auth.guard';
@@ -70,6 +74,8 @@ import { OjAdminGuard } from './guards/oj-admin.guard';
     BankService,
     CertificateService,
     KycProviderService,
+    SpvService,
+    PublicService,
     // WebSocket Gateway
     OjNotificationGateway,
     // Resolvers
@@ -80,6 +86,8 @@ import { OjAdminGuard } from './guards/oj-admin.guard';
     KycResolver,
     AdminResolver,
     BankResolver,
+    SpvResolver,
+    PublicResolver,
     // Guards
     OjAuthGuard,
     OjAdminGuard,
@@ -95,6 +103,8 @@ import { OjAdminGuard } from './guards/oj-admin.guard';
     BankService,
     CertificateService,
     KycProviderService,
+    SpvService,
+    PublicService,
     OjNotificationGateway,
   ],
 })
