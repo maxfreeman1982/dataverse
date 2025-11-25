@@ -1,0 +1,115 @@
+/**
+ * OJ Investment Platform - Design Tokens
+ * Colors
+ */
+
+:root {
+  /* Primary - Blue Trust */
+  --color-primary-50: #E6F2FF;
+  --color-primary-100: #CCE5FF;
+  --color-primary-200: #99CCFF;
+  --color-primary-300: #66B2FF;
+  --color-primary-400: #3399FF;
+  --color-primary-500: #0066CC;
+  --color-primary-600: #0052A3;
+  --color-primary-700: #003D7A;
+  --color-primary-800: #002952;
+  --color-primary-900: #001429;
+
+  /* Success - Green Growth */
+  --color-success-50: #E6F9F0;
+  --color-success-100: #CCF3E1;
+  --color-success-200: #99E7C3;
+  --color-success-300: #66DBA5;
+  --color-success-400: #33CF87;
+  --color-success-500: #00CC66;
+  --color-success-600: #00A352;
+  --color-success-700: #007A3D;
+  --color-success-800: #005229;
+  --color-success-900: #002914;
+
+  /* Warning - Orange Attention */
+  --color-warning-50: #FFF7E6;
+  --color-warning-100: #FFEFCC;
+  --color-warning-200: #FFDF99;
+  --color-warning-300: #FFCF66;
+  --color-warning-400: #FFBF33;
+  --color-warning-500: #FFB000;
+  --color-warning-600: #CC8D00;
+  --color-warning-700: #996A00;
+  --color-warning-800: #664700;
+  --color-warning-900: #332300;
+
+  /* Error - Red Alert */
+  --color-error-50: #FFE6E6;
+  --color-error-100: #FFCCCC;
+  --color-error-200: #FF9999;
+  --color-error-300: #FF6666;
+  --color-error-400: #FF3333;
+  --color-error-500: #CC0000;
+  --color-error-600: #A30000;
+  --color-error-700: #7A0000;
+  --color-error-800: #520000;
+  --color-error-900: #290000;
+
+  /* Neutral - Gray Scale */
+  --color-gray-50: #F9FAFB;
+  --color-gray-100: #F3F4F6;
+  --color-gray-200: #E5E7EB;
+  --color-gray-300: #D1D5DB;
+  --color-gray-400: #9CA3AF;
+  --color-gray-500: #6B7280;
+  --color-gray-600: #4B5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1F2937;
+  --color-gray-900: #111827;
+
+  --color-white: #FFFFFF;
+  --color-black: #000000;
+
+  /* Semantic Colors - Light Mode */
+  --bg-primary: var(--color-white);
+  --bg-secondary: var(--color-gray-50);
+  --bg-tertiary: var(--color-gray-100);
+  --bg-overlay: rgba(0, 0, 0, 0.5);
+
+  --text-primary: var(--color-gray-900);
+  --text-secondary: var(--color-gray-600);
+  --text-tertiary: var(--color-gray-400);
+  --text-inverse: var(--color-white);
+
+  --border-default: var(--color-gray-200);
+  --border-focus: var(--color-primary-500);
+  --border-error: var(--color-error-500);
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Dark Mode */
+[data-theme="dark"] {
+  --bg-primary: var(--color-gray-900);
+  --bg-secondary: var(--color-gray-800);
+  --bg-tertiary: var(--color-gray-700);
+  --bg-overlay: rgba(255, 255, 255, 0.1);
+
+  --text-primary: var(--color-gray-50);
+  --text-secondary: var(--color-gray-300);
+  --text-tertiary: var(--color-gray-500);
+  --text-inverse: var(--color-gray-900);
+
+  --border-default: var(--color-gray-700);
+  --border-focus: var(--color-primary-400);
+
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+}
