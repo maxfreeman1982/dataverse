@@ -21,7 +21,7 @@ Git
 
 ```bash
 git clone <votre-repo-url>
-cd dataverse
+cd oj
 ```
 
 ### 2. Configuration de l'environnement

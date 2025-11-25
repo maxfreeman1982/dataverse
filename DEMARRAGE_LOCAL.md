@@ -4,11 +4,11 @@
 
 ```bash
 # Si le projet est déjà sur votre machine
-cd /chemin/vers/dataverse
+cd /chemin/vers/oj
 
 # Ou cloner depuis GitHub
-git clone https://github.com/votre-username/dataverse.git
-cd dataverse
+git clone https://github.com/votre-username/oj-investment-platform.git
+cd oj
 
 # Vérifier la branche
 git branch
@@ -524,7 +524,7 @@ docker-compose logs -f api | grep ERROR
 ### Matin - Démarrage
 
 ```bash
-cd /chemin/vers/dataverse
+cd /chemin/vers/oj
 
 # Pull les dernières modifications
 git pull origin claude/start-new-project-0159hDkR8VSsXZFXUax2e8Yn
